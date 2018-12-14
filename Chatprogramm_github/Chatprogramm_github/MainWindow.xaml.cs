@@ -25,19 +25,33 @@ namespace Chatprogramm_github
    
     public partial class MainWindow : Window
     {   //Globale Variablen
-
+        delegate void AddMessage(string message);
         const int port = 54546;
-        const string broadcastadress = "255.255.255.255";
-        UdpClient nachrichtenempfänger = new UdpClient(broadcastadress, port);
-        UdpClient nachrichtensender = new UdpClient(port);
+        byte[] broadcastadress = new byte[] { 255, 255, 255, 255};
+
+        UdpClient nachrichtenempfänger;// = new UdpClient(new IPEndPoint(new IPAddress(broadcastadress), port));
+        UdpClient nachrichtensender;// = new UdpClient(port);
         Thread empfängerThread;
 
         public MainWindow()
         {
+          
+
+
             InitializeComponent();
+            IPAddress adress = new IPAddress(broadcastadress);
+            //UdpClient nachrichtensender = new UdpClient(new IPEndPoint(IPAddress.Loopback, port));
+            UdpClient nachrichtensender = new UdpClient("255.255.255.255", port);
+            UdpClient nachrichtenempfänger = new UdpClient(port);
+
             nachrichtensender.EnableBroadcast = true;
 
             ThreadStart start = new ThreadStart(Receiver);
+            empfängerThread = new Thread(start);
+            empfängerThread.IsBackground = true;
+            empfängerThread.Start();
+            Send("Hallo");
+            
 
 
         }
@@ -45,11 +59,24 @@ namespace Chatprogramm_github
         public void Receiver()
         {
             IPEndPoint endpoint = new IPEndPoint(IPAddress.Any, port); //ANy überwacht alle Ipadressend es Netzwerks
-            
+            AddMessage messageDelegate = MessageReceived;
+            while(true)
+            {
+                byte[] data = nachrichtenempfänger.Receive(ref endpoint); // ref --> Verweis
+                string message = Encoding.ASCII.GetString(data);
+                //System.Windows.Invoke(messageDelegate, message); //führt einen Delegaten aus
+                Dispatcher.Invoke(messageDelegate, message);
+            }
         }
-        public void InitializeSender()
+       
+        public void MessageReceived(string message)
         {
-            nachrichtenempfänger = new 
+            my_lbl.Content = message;
+        }
+        public void Send(string eingabe)
+        {
+            byte[] data = Encoding.ASCII.GetBytes(eingabe);
+            nachrichtensender.Send(data, data.Length);
         }
     }
 }
