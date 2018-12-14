@@ -27,7 +27,7 @@ namespace Chatprogramm_github
     {   //Globale Variablen
         delegate void AddMessage(string message);
         const int port = 54546;
-        byte[] broadcastadress = new byte[] { 255, 255, 255, 255};
+        const string broadcastaderss = "255.255.255.255";
 
         UdpClient nachrichtenempfänger;// = new UdpClient(new IPEndPoint(new IPAddress(broadcastadress), port));
         UdpClient nachrichtensender;// = new UdpClient(port);
@@ -39,10 +39,11 @@ namespace Chatprogramm_github
 
 
             InitializeComponent();
-            IPAddress adress = new IPAddress(broadcastadress);
-            //UdpClient nachrichtensender = new UdpClient(new IPEndPoint(IPAddress.Loopback, port));
-            UdpClient nachrichtensender = new UdpClient("255.255.255.255", port);
-            UdpClient nachrichtenempfänger = new UdpClient(port);
+           
+            
+            nachrichtensender = new UdpClient(broadcastaderss, port);
+            
+            nachrichtenempfänger = new UdpClient(port);
 
             nachrichtensender.EnableBroadcast = true;
 
@@ -62,7 +63,7 @@ namespace Chatprogramm_github
             AddMessage messageDelegate = MessageReceived;
             while(true)
             {
-                byte[] data = nachrichtenempfänger.Receive(ref endpoint); // ref --> Verweis
+               byte[] data = nachrichtenempfänger.Receive(ref endpoint); // ref --> Verweis
                 string message = Encoding.ASCII.GetString(data);
                 //System.Windows.Invoke(messageDelegate, message); //führt einen Delegaten aus
                 Dispatcher.Invoke(messageDelegate, message);
@@ -71,12 +72,17 @@ namespace Chatprogramm_github
        
         public void MessageReceived(string message)
         {
-            my_lbl.Content = message;
+            my_lbl.Content += message;
         }
         public void Send(string eingabe)
         {
             byte[] data = Encoding.ASCII.GetBytes(eingabe);
             nachrichtensender.Send(data, data.Length);
+        }
+
+        private void btn_senden_Click(object sender, RoutedEventArgs e)
+        {
+            Send("Jacqueline");
         }
     }
 }
