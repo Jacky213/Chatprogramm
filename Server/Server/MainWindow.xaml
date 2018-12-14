@@ -1,0 +1,43 @@
+﻿<Window x:Name="Chatprgramm" x:Class="Chatprogramm.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Chatprogramm"
+        mc:Ignorable="d"
+        Title="Chatprogramm" Height="492" Width="807.8" Grid.IsSharedSizeScope="True">
+    <Grid x:Name="Grid_1" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="431">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="320"/>
+            <RowDefinition Height="69*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="245"/>
+        </Grid.ColumnDefinitions>
+        <ListBox x:Name="ListboxKontakte" HorizontalAlignment="Center" Height="320" Margin="0,0,-0.2,0" VerticalAlignment="Center" Width="245" Background="#7F90FF00" Grid.Row="1" Grid.IsSharedSizeScope="True"/>
+        <Label x:Name="lbl_Kontakte_Titel" Content="Kontakte" HorizontalAlignment="Center" Height="60" VerticalAlignment="Center" Width="245" FontSize="24" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Center" Padding="5" UseLayoutRounding="False" HorizontalContentAlignment="Center" Background="#7F90FF00" Margin="0,0,-0.2,0" Grid.IsSharedSizeScope="True" Grid.Row="0"/>
+        <Button x:Name="btn_Kontakthinzufügen" Content="Kontakt hinzufügen" Height="25" Margin="60,10,60.8,5.8" Width="124" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Grid x:Name="Grid_2" HorizontalAlignment="Right" Height="435" Margin="0,0,-532.2,-14.2" VerticalAlignment="Top" Width="522" Grid.RowSpan="3" RenderTransformOrigin="0.5,0.5" Grid.IsSharedSizeScope="True">
+            <Grid.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Grid.RenderTransform>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="28*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="250"/>
+                <RowDefinition Height="8*"/>
+                <RowDefinition Height="130"/>
+            </Grid.RowDefinitions>
+            <TextBox x:Name="txt_Verlauf" HorizontalAlignment="Left" Height="250" Margin="0,0,-2.4,0" TextWrapping="Wrap" Text="&lt;Hier wird der Nachrichtenverlauf angezeigt&gt;" VerticalAlignment="Top" Width="524" VerticalScrollBarVisibility="Auto" IsReadOnly="True" Background="#1990FF00" Grid.IsSharedSizeScope="True" RenderTransformOrigin="0.5,0.5"/>
+            <TextBox x:Name="txt_Nachricht" HorizontalAlignment="Left" Height="126" Margin="-3,0.4,0,0" TextWrapping="Wrap" Text="&lt;Hier Nachricht eingeben&gt;" VerticalAlignment="Top" Width="524" Grid.Row="2"/>
+            <Button x:Name="btn_Senden" Content="Senden" HorizontalAlignment="Right" Height="25" Margin="0,10.4,0.6,5.4" Width="124" RenderTransformOrigin="0.476,-1.288" Grid.Row="1" VerticalAlignment="Center" Click="btn_Senden_Click"/>
+        </Grid>
+    </Grid>
+</Window>
