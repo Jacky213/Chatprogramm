@@ -8,6 +8,7 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Label x:Name="my_lbl" Content="Label" HorizontalAlignment="Left" Height="45" Margin="365,135,0,0" VerticalAlignment="Top" Width="335"/>
+        <Button x:Name="btn_senden" Content="Senden" HorizontalAlignment="Left" Height="75" Margin="495,245,0,0" VerticalAlignment="Top" Width="255" Click="btn_senden_Click"/>
 
     </Grid>
 </Window>
