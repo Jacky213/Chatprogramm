@@ -24,20 +24,31 @@ namespace Chatprogramm_github
 {    
    
     public partial class MainWindow : Window
-    {   //Globale Variablen
+    {  
+        //Globale Variablen
         delegate void AddMessage(string message);
         const int port = 54546;
         const string broadcastaderss = "255.255.255.255";
         UdpClient nachrichtenempfänger;// = new UdpClient(new IPEndPoint(new IPAddress(broadcastadress), port));
         UdpClient nachrichtensender;// = new UdpClient(port);
         Thread empfängerThread;
+        string username;
 
         public MainWindow()
-        {  
-
-
+        {
             InitializeComponent();
-           
+
+            // Username eingabe anzeigen:            
+            Username_Dialog dlg = new Username_Dialog();            
+            dlg.ShowDialog();
+            if(dlg.DialogResult==true)
+            {
+                username = dlg.Eingabe;
+            }
+            MessageBox.Show("Sie haben sich als " + username + " angemeldet", "Anmeldung erfolgreich");
+            //Usernameeingabe war erfolgreich wird auch ausgegeben.
+        
+            txt_Verlauf.Text = "";
             
             nachrichtensender = new UdpClient(broadcastaderss, port);
             
@@ -49,7 +60,7 @@ namespace Chatprogramm_github
             empfängerThread = new Thread(start);
             empfängerThread.IsBackground = true;
             empfängerThread.Start();
-            Send("Hallo");
+            //Send("Hallo");
             
 
 
@@ -70,17 +81,22 @@ namespace Chatprogramm_github
        
         public void MessageReceived(string message)
         {
-            my_lbl.Content += message;
+            txt_Verlauf.Text += message + "\n";
         }
+
+        //Sendet einen String
         public void Send(string eingabe)
         {
             byte[] data = Encoding.ASCII.GetBytes(eingabe);
             nachrichtensender.Send(data, data.Length);
-        }
+        }      
 
-        private void btn_senden_Click(object sender, RoutedEventArgs e)
+        //Nachricht wird bei Klick aus Sendenbtn gesendet
+        private void btn_Senden_Click_1(object sender, RoutedEventArgs e)
         {
-            Send("Jacqueline");
+            string nachricht = txt_Nachricht.Text;
+            Send(nachricht);
+            txt_Nachricht.Text = "";
         }
     }
 }
