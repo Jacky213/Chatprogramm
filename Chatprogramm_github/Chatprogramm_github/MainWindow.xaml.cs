@@ -28,14 +28,12 @@ namespace Chatprogramm_github
         delegate void AddMessage(string message);
         const int port = 54546;
         const string broadcastaderss = "255.255.255.255";
-
         UdpClient nachrichtenempfänger;// = new UdpClient(new IPEndPoint(new IPAddress(broadcastadress), port));
         UdpClient nachrichtensender;// = new UdpClient(port);
         Thread empfängerThread;
 
         public MainWindow()
-        {
-          
+        {  
 
 
             InitializeComponent();
