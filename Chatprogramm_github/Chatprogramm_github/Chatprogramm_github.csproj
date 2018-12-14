@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Nachricht.cs" />
     <Compile Include="Username_Dialog.xaml.cs">
       <DependentUpon>Username_Dialog.xaml</DependentUpon>
     </Compile>
