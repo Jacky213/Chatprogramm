@@ -18,18 +18,43 @@ namespace Chatprogramm_github
     /// Interaktionslogik für Username_Dialog.xaml
     /// </summary>
     public partial class Username_Dialog : Window
-    {
-        public string Eingabe; //Kann hier noch über Get/Set die Länge des Namens begrenzen, wenn gewollt.
+    {   //Attribute sind beide Private
+        
+        string Username; //Speichert die Eingabe
+        User Mainuser; //Ziel des Dialogs ist die Erstellung eines Users, des Nutzers dieses Programms, Soll später gespeichert werden
 
+        // Standardkonstruktor
         public Username_Dialog()
         {
             InitializeComponent();
         }
-        //Hinzufügen, dass Username nicht länger als 20 Zeichen ist.
+        
+        //Bei Klick auf den Button Ok des Fensters wird das ausgeführt
         private void btn_Ok_Username_Click(object sender, RoutedEventArgs e)
+        {  
+            //Die Eingabe wird ausgelesen und gespeichert
+            this.Username = txt_Username.Text;
+            //Der User wird mit der Eingabe als username erstellt
+            this.Mainuser = new User(this.Username);
+            //Entspricht die Eingabe den Anforderungen des Usernames wird der Dialog geschlossen.
+            if(this.Mainuser.Username!=null)
+            {
+                this.DialogResult = true;
+                
+            }
+            //Entspricht die Eingabe nicht den Anforderungen, wird eine Messagebox geöffnet und der Nutzer muss einen neuen Namen eingeben. Geht von neuem los.
+            else
+            {
+                MessageBox.Show("Die Länge des Usernames muss zwischen 4 und 20 Stellen lang sein. Bitte geben Sie einen gültigen Username ein.", "Error");
+                txt_Username.Text = "";
+            }
+            
+        }
+
+        //Methode zur Ausgabe des kreeierten Nutzers.
+        public User ReturnUser()
         {
-            this.Eingabe = txt_Username.Text;
-            this.DialogResult = true;
+            return this.Mainuser;
         }
     }
 }

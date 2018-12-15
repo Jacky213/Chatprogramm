@@ -32,22 +32,14 @@ namespace Chatprogramm_github
         UdpClient nachrichtenempfänger;// = new UdpClient(new IPEndPoint(new IPAddress(broadcastadress), port));
         UdpClient nachrichtensender;// = new UdpClient(port);
         Thread empfängerThread;
-        string username;
+        User Mainuser = new User(); 
 
         public MainWindow()
         {
             InitializeComponent();
 
-            // Username eingabe anzeigen:            
-            Username_Dialog dlg = new Username_Dialog();            
-            dlg.ShowDialog();
-            if(dlg.DialogResult==true)
-            {
-                username = dlg.Eingabe;
-            }
-            MessageBox.Show("Sie haben sich als " + username + " angemeldet", "Anmeldung erfolgreich");
-            //Usernameeingabe war erfolgreich wird auch ausgegeben.
-        
+            Usernamen_festlegen();
+           
             txt_Verlauf.Text = "";
             
             nachrichtensender = new UdpClient(broadcastaderss, port);
@@ -98,5 +90,23 @@ namespace Chatprogramm_github
             Send(nachricht);
             txt_Nachricht.Text = "";
         }
+
+        //Methode, die den Usernamen festlegt
+        private void Usernamen_festlegen()
+        {
+            //Ein Dialog zur Eingabe des Usernamens wird erstellt und angezeigt            
+            Username_Dialog dlg = new Username_Dialog();
+            dlg.ShowDialog();
+            if (dlg.DialogResult == true)
+            {
+                Mainuser = dlg.ReturnUser();
+            }
+            //War die Erstellung des Users erfolgreich, wird eine Messagebox angezeigt
+            MessageBox.Show("Sie haben sich als " + Mainuser.Username + " angemeldet", "Anmeldung erfolgreich");
+            //Usernameeingabe war erfolgreich wird auch ausgegeben.
+
+        }
+
+
     }
 }
