@@ -9,16 +9,16 @@ namespace Chatprogramm_github
         public string Sendername;   //20 Zeichen
         public string Empfängername;    //20 Zeichen
         public DateTime Zeitpunkt;  //19 Zeichen
-        public bool Abgeschickt;    //4Zeichen
+        public bool Abgeschickt;    //4 Zeichen
 
         //Konstruktoren
         public Nachricht(string nachrichtentext, string sendername, string empfängername, DateTime zeitpunkt, bool abgeschickt)
         {
-            Nachrichtentext = nachrichtentext;
-            Sendername = sendername;
-            Empfängername = empfängername;
-            Zeitpunkt = zeitpunkt;
-            Abgeschickt = abgeschickt;
+            this.Nachrichtentext = nachrichtentext;
+            this.Sendername = sendername;
+            this.Empfängername = empfängername;
+            this.Zeitpunkt = zeitpunkt;
+            this.Abgeschickt = abgeschickt;
         }
 
         public Nachricht()
@@ -43,7 +43,7 @@ namespace Chatprogramm_github
             Codierung += Empfängername + ",";
             Codierung += Zeitpunkt.ToString() + ",";
             Codierung += Abgeschickt.ToString() + ",";
-            Codierung += Nachrichtentext + ",";
+            Codierung += Nachrichtentext + ","; //müsste man das Komma am Ende nicht weglassen können?
 
             return Codierung;
         }

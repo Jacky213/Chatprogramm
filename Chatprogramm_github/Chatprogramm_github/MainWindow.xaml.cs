@@ -91,7 +91,7 @@ namespace Chatprogramm_github
             nachrichtensender.Send(data, data.Length);
         }      
 
-        //Nachricht wird bei Klick aus Sendenbtn gesendet
+        //Nachricht wird bei Klick auf Sendenbtn gesendet
         private void btn_Senden_Click_1(object sender, RoutedEventArgs e)
         {
             string nachricht = txt_Nachricht.Text;

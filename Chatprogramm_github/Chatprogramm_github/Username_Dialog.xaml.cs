@@ -25,7 +25,7 @@ namespace Chatprogramm_github
         {
             InitializeComponent();
         }
-
+        //Hinzufügen, dass Username nicht länger als 20 Zeichen ist.
         private void btn_Ok_Username_Click(object sender, RoutedEventArgs e)
         {
             this.Eingabe = txt_Username.Text;
