@@ -45,7 +45,7 @@ namespace Chatprogramm_github
             //Entspricht die Eingabe nicht den Anforderungen, wird eine Messagebox geöffnet und der Nutzer muss einen neuen Namen eingeben. Geht von neuem los.
             else
             {
-                MessageBox.Show("Die Länge des Usernames muss zwischen 4 und 20 Stellen lang sein. Bitte geben Sie einen gültigen Username ein.", "Error");
+                MessageBox.Show("Die Länge des Usernames muss zwischen 3 und 20 Stellen lang sein. Bitte geben Sie einen gültigen Username ein.", "Error");
                 txt_Username.Text = "";
             }
             

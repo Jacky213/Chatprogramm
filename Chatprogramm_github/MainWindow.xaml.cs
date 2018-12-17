@@ -22,6 +22,10 @@ using System.Threading;
 
 namespace Chatprogramm_github
 {    
+    // J. Codierte Nachrichten verschicken mit Kontakten abgleichen in Main und in Klasse hinzufügen
+    // J. Nachrichten schön darstellen
+    // L. Kontakte als Liste und darstellen und zwischen Chats wechseln (Einmal Kontakthinzufügenbutton und Kontakte abgleichen bei neuer Nachricht und Mitteilung an User ob zu Kontakten hinzufügen. (neuer Dialog zur Entscheidung) Button Kontakt löschen)
+    //Speicherung in XML-Format zu zweit nach Weihnachten
    
     public partial class MainWindow : Window
     {  

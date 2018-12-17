@@ -18,7 +18,7 @@ namespace Chatprogramm_github
             }
             set //Der Username muss zwischen 4 und 20 Stellen lang sein, damit er gespeichert wird. Ist dies nicht der fall, wird er auf null gesetzt
             {
-                if ( value.Length <= 20 && value.Length>=4)
+                if ( value.Trim().Length <= 20 && value.Trim().Length>=3) //Mit Länge 3 sind doppelte Namen unwahrscheinlicher
                 {
                     this.username = value;
                 }

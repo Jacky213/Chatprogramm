@@ -6,17 +6,17 @@ namespace Chatprogramm_github
     {
         //Eigenschaften
         public string Nachrichtentext;
-        public string Sendername;   //20 Zeichen
-        public string Empfängername;    //20 Zeichen
+        public User Sender;   //20 Zeichen
+        public User Empfänger;    //20 Zeichen
         public DateTime Zeitpunkt;  //19 Zeichen
         public bool Abgeschickt;    //4 Zeichen
 
         //Konstruktoren
-        public Nachricht(string nachrichtentext, string sendername, string empfängername, DateTime zeitpunkt, bool abgeschickt)
+        public Nachricht(string nachrichtentext, User sender, User empfänger, DateTime zeitpunkt, bool abgeschickt)
         {
             this.Nachrichtentext = nachrichtentext;
-            this.Sendername = sendername;
-            this.Empfängername = empfängername;
+            this.Sender = sender;
+            this.Empfänger = empfänger;
             this.Zeitpunkt = zeitpunkt;
             this.Abgeschickt = abgeschickt;
         }
@@ -26,24 +26,26 @@ namespace Chatprogramm_github
         }
 
         //Methoden
+        //bytearray in Methoden einfügen
         public string NachrichtCodieren()
         {
             //Protokoll: Sender,Empfänger,Zeitpunkt,Abgeschickt,Nachricht
             string Codierung = "";
-
-            while (Sendername.Length < 20)
+            string username = Sender.Username; 
+            while (username.Length < 20)
             {
-                Sendername += " ";
+                username += " ";
             }
-            Codierung += Sendername  + ",";
-            while (Empfängername.Length < 20)
+            Codierung += username  + ",";
+            string empfängername = Empfänger.Username;
+            while (empfängername.Length < 20)
             {
-                Empfängername += " ";
+                empfängername += " ";
             }
-            Codierung += Empfängername + ",";
+            Codierung += empfängername + ",";
             Codierung += Zeitpunkt.ToString() + ",";
             Codierung += Abgeschickt.ToString() + ",";
-            Codierung += Nachrichtentext + ","; //müsste man das Komma am Ende nicht weglassen können?
+            Codierung += Nachrichtentext;
 
             return Codierung;
         }
@@ -54,8 +56,8 @@ namespace Chatprogramm_github
             string[]  EmpfangeneDaten = new string[5];
 
             EmpfangeneDaten = Codierung.Split(',');
-            Empfang.Sendername = EmpfangeneDaten[0].Trim();
-            Empfang.Empfängername = EmpfangeneDaten[1].Trim();
+            Empfang.Sender.Username = EmpfangeneDaten[0].Trim();
+            Empfang.Empfänger.Username = EmpfangeneDaten[1].Trim();
             Empfang.Zeitpunkt = Convert.ToDateTime(EmpfangeneDaten[2]);
             Empfang.Abgeschickt = Convert.ToBoolean(EmpfangeneDaten[3]);
             Empfang.Nachrichtentext = EmpfangeneDaten[4];
