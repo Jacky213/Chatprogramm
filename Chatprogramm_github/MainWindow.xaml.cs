@@ -36,7 +36,10 @@ namespace Chatprogramm_github
         UdpClient nachrichtenempfänger;// = new UdpClient(new IPEndPoint(new IPAddress(broadcastadress), port));
         UdpClient nachrichtensender;// = new UdpClient(port);
         Thread empfängerThread;
-        User Mainuser = new User(); 
+        User Mainuser = new User();
+        Nachricht ZumSenden;
+        Nachricht EmpfangeneNachricht;
+        User hilfe = new User("Michael"); //Zum Testen!!
 
         public MainWindow()
         {
@@ -44,7 +47,7 @@ namespace Chatprogramm_github
 
             Usernamen_festlegen();
            
-            txt_Verlauf.Text = "";
+            //txt_Verlauf.Text = "";
             
             nachrichtensender = new UdpClient(broadcastaderss, port);
             
@@ -77,13 +80,15 @@ namespace Chatprogramm_github
        
         public void MessageReceived(string message)
         {
-            txt_Verlauf.Text += message + "\n";
+            EmpfangeneNachricht = Nachricht.NachrichtDecodieren(message);
+            canvas_Verlauf.Children.Add(EmpfangeneNachricht.EmpfangeneNachrichtAusgabe());
         }
 
         //Sendet einen String
         public void Send(string eingabe)
         {
-            byte[] data = Encoding.ASCII.GetBytes(eingabe);
+            ZumSenden = new Nachricht(eingabe, Mainuser, hilfe, DateTime.Now, true);
+            byte[] data = ZumSenden.NachrichtCodieren();            
             nachrichtensender.Send(data, data.Length);
         }      
 

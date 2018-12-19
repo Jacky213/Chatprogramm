@@ -1,4 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
 
 namespace Chatprogramm_github
 {
@@ -23,11 +39,13 @@ namespace Chatprogramm_github
 
         public Nachricht()
         {
+            this.Sender = new User();
+            this.Empfänger = new User();
         }
 
         //Methoden
         //bytearray in Methoden einfügen
-        public string NachrichtCodieren()
+        public byte[] NachrichtCodieren()
         {
             //Protokoll: Sender,Empfänger,Zeitpunkt,Abgeschickt,Nachricht
             string Codierung = "";
@@ -47,7 +65,8 @@ namespace Chatprogramm_github
             Codierung += Abgeschickt.ToString() + ",";
             Codierung += Nachrichtentext;
 
-            return Codierung;
+            byte[] data = Encoding.ASCII.GetBytes(Codierung);
+            return data;
         }
 
         public static Nachricht NachrichtDecodieren (string Codierung)
@@ -63,6 +82,25 @@ namespace Chatprogramm_github
             Empfang.Nachrichtentext = EmpfangeneDaten[4];
 
             return Empfang;
-        }        
+        } 
+        public TextBox EigeneNachrichtAusgabe()
+        {
+            TextBox mytxt = new TextBox();
+            mytxt.Text = this.Nachrichtentext;
+            mytxt.Width = 450;
+            mytxt.Background = new SolidColorBrush(Colors.Aqua);
+
+            return mytxt;
+        }
+
+        public TextBox EmpfangeneNachrichtAusgabe()
+        {
+            TextBox mytxt = new TextBox();
+            mytxt.Text = this.Nachrichtentext;
+            mytxt.Width = 500;
+            mytxt.Background = new SolidColorBrush(Colors.AliceBlue);
+
+            return mytxt;
+        }
     }
 }

@@ -41,7 +41,7 @@
                 <RowDefinition Height="130
                                "/>
             </Grid.RowDefinitions>
-            <TextBox x:Name="txt_Verlauf" HorizontalAlignment="Left" Height="250" Margin="0,0,-2.4,0" TextWrapping="Wrap" Text="&lt;Hier wird der Nachrichtenverlauf angezeigt&gt;" VerticalAlignment="Top" Width="524" VerticalScrollBarVisibility="Auto" IsReadOnly="True" Background="#1990FF00" Grid.IsSharedSizeScope="True" RenderTransformOrigin="0.5,0.5"/>
+            <Canvas x:Name="canvas_Verlauf" HorizontalAlignment="Left" Height="250" Margin="0,0,-2.4,0" VerticalAlignment="Top" Width="524"  Background="#1990FF00" Grid.IsSharedSizeScope="True" RenderTransformOrigin="0.5,0.5"/>
             <TextBox x:Name="txt_Nachricht" HorizontalAlignment="Left" Height="126" Margin="-3,0.4,0,0" TextWrapping="Wrap" Text="&lt;Hier Nachricht eingeben&gt;" VerticalAlignment="Top" Width="524" Grid.Row="2"/>
             <Button x:Name="btn_Senden" Content="Senden" HorizontalAlignment="Right" Height="25" Margin="0,10.4,0.6,5.4" Width="124" RenderTransformOrigin="0.476,-1.288" Grid.Row="1" VerticalAlignment="Center" Click="btn_Senden_Click_1"/>
         </Grid>
