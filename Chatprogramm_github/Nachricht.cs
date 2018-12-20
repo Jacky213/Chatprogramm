@@ -65,7 +65,7 @@ namespace Chatprogramm_github
             Codierung += Abgeschickt.ToString() + ",";
             Codierung += Nachrichtentext;
 
-            byte[] data = Encoding.ASCII.GetBytes(Codierung);
+            byte[] data = Encoding.Unicode.GetBytes(Codierung);
             return data;
         }
 
@@ -79,26 +79,19 @@ namespace Chatprogramm_github
             Empfang.Empfänger.Username = EmpfangeneDaten[1].Trim();
             Empfang.Zeitpunkt = Convert.ToDateTime(EmpfangeneDaten[2]);
             Empfang.Abgeschickt = Convert.ToBoolean(EmpfangeneDaten[3]);
-            Empfang.Nachrichtentext = EmpfangeneDaten[4];
+            Empfang.Nachrichtentext = EmpfangeneDaten[4]; //Probelm wenn Nachricht ein Komma enthält!!
 
             return Empfang;
         } 
-        public TextBox EigeneNachrichtAusgabe()
-        {
-            TextBox mytxt = new TextBox();
-            mytxt.Text = this.Nachrichtentext;
-            mytxt.Width = 450;
-            mytxt.Background = new SolidColorBrush(Colors.Aqua);
 
-            return mytxt;
-        }
 
         public TextBox EmpfangeneNachrichtAusgabe()
         {
             TextBox mytxt = new TextBox();
             mytxt.Text = this.Nachrichtentext;
             mytxt.Width = 500;
-            mytxt.Background = new SolidColorBrush(Colors.AliceBlue);
+            mytxt.Background = new SolidColorBrush(Colors.ForestGreen);
+            mytxt.IsReadOnly = true;
 
             return mytxt;
         }

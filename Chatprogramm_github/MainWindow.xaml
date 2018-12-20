@@ -41,9 +41,17 @@
                 <RowDefinition Height="130
                                "/>
             </Grid.RowDefinitions>
-            <Canvas x:Name="canvas_Verlauf" HorizontalAlignment="Left" Height="250" Margin="0,0,-2.4,0" VerticalAlignment="Top" Width="524"  Background="#1990FF00" Grid.IsSharedSizeScope="True" RenderTransformOrigin="0.5,0.5"/>
-            <TextBox x:Name="txt_Nachricht" HorizontalAlignment="Left" Height="126" Margin="-3,0.4,0,0" TextWrapping="Wrap" Text="&lt;Hier Nachricht eingeben&gt;" VerticalAlignment="Top" Width="524" Grid.Row="2"/>
+            <TextBox x:Name="txt_Nachricht" HorizontalAlignment="Left" Height="126" Margin="-3,0.4,0,0" TextWrapping="Wrap" Text="&lt;Hier Nachricht eingeben&gt;" VerticalAlignment="Top" Width="524" Grid.Row="2" AcceptsReturn="True"/>
             <Button x:Name="btn_Senden" Content="Senden" HorizontalAlignment="Right" Height="25" Margin="0,10.4,0.6,5.4" Width="124" RenderTransformOrigin="0.476,-1.288" Grid.Row="1" VerticalAlignment="Center" Click="btn_Senden_Click_1"/>
+            <ScrollViewer HorizontalAlignment="Left" Height="250" Grid.RowSpan="2" VerticalAlignment="Top" Width="521" Margin="1,10,-0.4,0" Background="#FFCEFF84">
+                <Grid x:Name="grid_Verlauf" Height="0" Width="502" VerticalAlignment="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                </Grid>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </Window>

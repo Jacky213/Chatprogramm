@@ -23,6 +23,7 @@ using System.Threading;
 namespace Chatprogramm_github
 {    
     // J. Codierte Nachrichten verschicken mit Kontakten abgleichen in Main und in Klasse hinzufügen
+    // send and receive in eine Klasse auslagern
     // J. Nachrichten schön darstellen
     // L. Kontakte als Liste und darstellen und zwischen Chats wechseln (Einmal Kontakthinzufügenbutton und Kontakte abgleichen bei neuer Nachricht und Mitteilung an User ob zu Kontakten hinzufügen. (neuer Dialog zur Entscheidung) Button Kontakt löschen)
     //Speicherung in XML-Format zu zweit nach Weihnachten
@@ -40,6 +41,8 @@ namespace Chatprogramm_github
         Nachricht ZumSenden;
         Nachricht EmpfangeneNachricht;
         User hilfe = new User("Michael"); //Zum Testen!!
+        int row = 0;
+       
 
         public MainWindow()
         {
@@ -59,33 +62,55 @@ namespace Chatprogramm_github
             empfängerThread = new Thread(start);
             empfängerThread.IsBackground = true;
             empfängerThread.Start();
-            //Send("Hallo");
-            
+            //grid_Verlauf.Height = 80;           
 
 
         }
         
-        public void Receiver()
+        public void Receiver() //Könnte man in Klasse auslagern??
         {
             IPEndPoint endpoint = new IPEndPoint(IPAddress.Any, port); //ANy überwacht alle Ipadressend es Netzwerks
             AddMessage messageDelegate = MessageReceived;
             while(true)
             {
                byte[] data = nachrichtenempfänger.Receive(ref endpoint); // ref --> Verweis
-                string message = Encoding.ASCII.GetString(data);
+                string message = Encoding.Unicode.GetString(data);
                 //System.Windows.Invoke(messageDelegate, message); //führt einen Delegaten aus
                 Dispatcher.Invoke(messageDelegate, message);
             }
         }
        
-        public void MessageReceived(string message)
+        public void MessageReceived(string message) //Anzeigen der Message
         {
+                        
             EmpfangeneNachricht = Nachricht.NachrichtDecodieren(message);
-            canvas_Verlauf.Children.Add(EmpfangeneNachricht.EmpfangeneNachrichtAusgabe());
+            TextBox nachricht = new TextBox();
+            nachricht = EmpfangeneNachricht.EmpfangeneNachrichtAusgabe();           
+            grid_Verlauf.Height = grid_Verlauf.Height + (nachricht.Height+1)*nachricht.FontSize;
+            grid_Verlauf.RowDefinitions.Add(new RowDefinition());
+            if (EmpfangeneNachricht.Sender.Username == Mainuser.Username)
+            {
+                Grid.SetColumn(nachricht, 1);
+                Grid.SetRow(nachricht, row);
+                row++;
+            }
+            else
+            {
+
+                Grid.SetColumn(nachricht, 0);
+                Grid.SetRow(nachricht, row);
+                row++;
+            }
+            if (row>=9)
+            {
+                row = 0;
+            }
+            grid_Verlauf.Children.Add(nachricht);
+            
         }
 
         //Sendet einen String
-        public void Send(string eingabe)
+        public void Send(string eingabe) //Könnten wir auch auslagern
         {
             ZumSenden = new Nachricht(eingabe, Mainuser, hilfe, DateTime.Now, true);
             byte[] data = ZumSenden.NachrichtCodieren();            
