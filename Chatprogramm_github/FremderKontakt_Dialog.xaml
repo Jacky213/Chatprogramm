@@ -1,0 +1,18 @@
+﻿<Window x:Class="Chatprogramm_github.FremderKontakt_Dialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Chatprogramm_github"
+        mc:Ignorable="d"
+        Title="Fremder Benutzer" Height="176" Width="400">
+
+    <StackPanel>
+        <TextBlock Text="Sie haben eine Nachricht von einem fremden Benutzer erhalten. Wollen Sie diesen speichern oder ignorieren?" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="347" TextWrapping="Wrap" Margin="15"/>
+        <WrapPanel>
+            <Button x:Name="btn_Speichern" Content="Speichern" Height="25" VerticalAlignment="Top" Margin="90, 15, 10, 10" Width="95" Click="btn_Speichern_Click"/>
+            <Button x:Name="btn_Ignorieren" Content="Ignorieren" Height="25" VerticalAlignment="Top" Margin="15" Width="95" Click="btn_Ignorieren_Click"/>
+        </WrapPanel>
+    </StackPanel>
+    
+</Window>
