@@ -22,22 +22,29 @@ using System.Threading;
 
 namespace Chatprogramm_github
 {
+    /// <To-Do>
+
     // J. Codierte Nachrichten verschicken mit Kontakten abgleichen in Main und in Klasse hinzufügen
     // send and receive in eine Klasse auslagern
     // J. Nachrichten schön darstellen
 
-    // L. Kontakte als Liste und darstellen und zwischen Chats wechseln 
-    //(Einmal Kontakthinzufügenbutton und Kontakte abgleichen bei neuer Nachricht und Mitteilung an User ob zu Kontakten hinzufügen. 
-    //(neuer Dialog zur Entscheidung) Button Kontakt löschen)
-    
-    //Speicherung in XML-Format zu zweit nach Weihnachten
-   
+    // L. Kontakte als Liste und darstellen     !erledigt!
+    // zwischen Chats wechseln -> Erst speichern der Nachrichten 
+    // Kontakthinzufügenbutton  !erledigt!
+    // Kontakte abgleichen bei neuer Nachricht und Mitteilung an User ob zu Kontakten hinzufügen 
+    // neuer Dialog zur Entscheidung    !erledigt!
+    // Button Kontakt löschen    !erledigt!
+
+    // Speicherung in XML-Format zu zweit nach Weihnachten
+
+    /// </To-Do>
+
     public partial class MainWindow : Window
     {  
         //Globale Variablen
         delegate void AddMessage(string message);
         const int port = 54546;
-        const string broadcastaderss = "255.255.255.255";
+        const string broadcastadress = "255.255.255.255";
         UdpClient nachrichtenempfänger;// = new UdpClient(new IPEndPoint(new IPAddress(broadcastadress), port));
         UdpClient nachrichtensender;// = new UdpClient(port);
         Thread empfängerThread;
@@ -47,9 +54,6 @@ namespace Chatprogramm_github
         int row = 0;
         List<User> Kontaktliste = new List<User>();
 
-        User hilfe = new User("Michael"); //Zum Testen!!
-
-
         public MainWindow()
         {
             InitializeComponent();
@@ -57,13 +61,13 @@ namespace Chatprogramm_github
             Usernamen_festlegen();          
             
             //Sender initialisieren
-            nachrichtensender = new UdpClient(broadcastaderss, port);
+            nachrichtensender = new UdpClient(broadcastadress, port);
             nachrichtensender.EnableBroadcast = true;
 
             //Empfänger initialisieren
             nachrichtenempfänger = new UdpClient(port);            
 
-            //Parallerer Thread für das Empfangen von Nachrichten anlegen
+            //Paralleler Thread für das Empfangen von Nachrichten anlegen
             ThreadStart start = new ThreadStart(Receiver);
             empfängerThread = new Thread(start);
             empfängerThread.IsBackground = true;
@@ -86,8 +90,14 @@ namespace Chatprogramm_github
         public void MessageReceived(string message) //Anzeigen der Message
         {                        
             EmpfangeneNachricht = Nachricht.NachrichtDecodieren(message);
-            TextBox Tb_nachricht = new TextBox();
-            Tb_nachricht = EmpfangeneNachricht.EmpfangeneNachrichtAusgabe();           
+
+            NachrichtDarstellen();
+        }
+
+        public void NachrichtDarstellen()
+        {
+            TextBox Tb_nachricht = new TextBox();   //neue Textbox erstellen
+            Tb_nachricht = EmpfangeneNachricht.EmpfangeneNachrichtAusgabe();
             grid_Verlauf.Height = grid_Verlauf.Height + (Tb_nachricht.Height + 1) * Tb_nachricht.FontSize;
             grid_Verlauf.RowDefinitions.Add(new RowDefinition());
             if (EmpfangeneNachricht.Sender.Username == Mainuser.Username)
@@ -95,26 +105,54 @@ namespace Chatprogramm_github
                 Grid.SetColumn(Tb_nachricht, 1);
                 Grid.SetRow(Tb_nachricht, row);
                 row++;
+                grid_Verlauf.Children.Add(Tb_nachricht);    //Anzeigen
             }
-            else
+            else if (EmpfangeneNachricht.Empfänger.Username == Mainuser.Username)   //Ist die Nachricht an mich adressiert
             {
                 Grid.SetColumn(Tb_nachricht, 0);
                 Grid.SetRow(Tb_nachricht, row);
                 row++;
+
+                if (Kontaktliste.Contains(EmpfangeneNachricht.Sender))  //Ist der Absender in der Kontaktliste?
+                {
+                    grid_Verlauf.Children.Add(Tb_nachricht);    //Anzeigen
+                }
+                else    //Absender nicht in Kontaktliste
+                {
+                    FremderKontakt_Dialog fremderKontakt_Dialog1 = new FremderKontakt_Dialog();
+                    fremderKontakt_Dialog1.ShowDialog();
+                    if (fremderKontakt_Dialog1.DialogResult == true)
+                    {
+                        if (fremderKontakt_Dialog1.Ergebnis == true)    //Benutzer soll als Kontakt gespeichert werden
+                        {
+                            User FremderBenutzer = new User(EmpfangeneNachricht.Sender.Username);
+                            KontaktInKontaktliste(FremderBenutzer);
+                            grid_Verlauf.Children.Add(Tb_nachricht);
+                        }
+                    }
+                }
             }
-            if (row>=9)
+
+            if (row >= 9)   //Wieder oben anfangen
             {
                 row = 0;
             }
-            grid_Verlauf.Children.Add(Tb_nachricht);            
+            //grid_Verlauf.Children.Add(Tb_nachricht);
         }
 
         //Sendet einen String
         public void Send(string eingabe) //Könnten wir auch auslagern
         {
-            ZumSenden = new Nachricht(eingabe, Mainuser, hilfe, DateTime.Now, true);
-            byte[] data = ZumSenden.NachrichtCodieren();            
-            nachrichtensender.Send(data, data.Length);
+            if (ListboxKontakte.SelectedIndex >= 0)     //Ist ein Kontakt ausgewählt?
+            {
+                ZumSenden = new Nachricht(eingabe, Mainuser, Kontaktliste[ListboxKontakte.SelectedIndex], DateTime.Now, true);  //Könnte eine Exception werfen, wenn kein Kontakt ausgewählt ist
+                byte[] data = ZumSenden.NachrichtCodieren();
+                nachrichtensender.Send(data, data.Length);
+            }
+            else
+            {
+                MessageBox.Show("Sie müssen einen Kontakt auswählen", "Kein Kontakt ausgewählt");
+            }
         }      
 
         //Nachricht wird bei Klick auf Sendenbtn gesendet
@@ -123,6 +161,17 @@ namespace Chatprogramm_github
             string nachricht = txt_Nachricht.Text;
             Send(nachricht);
             txt_Nachricht.Text = "";
+        }
+
+        //Senden mit Enter
+        private void txt_Nachricht_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                string nachricht = txt_Nachricht.Text;
+                Send(nachricht);
+                txt_Nachricht.Text = "";
+            }
         }
 
         //Methode, die den Usernamen festlegt
@@ -136,28 +185,34 @@ namespace Chatprogramm_github
                 Mainuser = dlg.ReturnUser();
             }
             //War die Erstellung des Users erfolgreich, wird eine Messagebox angezeigt
-            MessageBox.Show("Sie haben sich als " + Mainuser.Username + " angemeldet.", "Anmeldung erfolgreich");
+            MessageBox.Show("Sie haben sich als \"" + Mainuser.Username + "\" angemeldet.", "Anmeldung erfolgreich");
             //Usernameeingabe war erfolgreich wird auch ausgegeben.
         }
 
-        private void btn_KontaktHinzufügen_Click(object sender, RoutedEventArgs e)
+        private void btn_KontaktHinzufügen_Click(object sender, RoutedEventArgs e)  //Kontakt hinzufügen
         {
-            try
+            Username_Dialog dlg = new Username_Dialog();
+            dlg.ShowDialog();
+            if (dlg.DialogResult == true)
             {
-                Username_Dialog dlg = new Username_Dialog();
-                dlg.ShowDialog();
-                if (dlg.DialogResult == true)
-                {
-                    User NeuerKontakt = dlg.ReturnUser();   //Usernamen des Kontakts abfragen
-                    Kontaktliste.Add(NeuerKontakt);     //Kontakt zur Kontakrliste hinzufügen
-                    ListboxKontakte.ItemsSource = Kontaktliste;
-                    MessageBox.Show("Der Kontakt " + NeuerKontakt.Username + " wurde erfolgreich zur Kontaktliste hinzugefügt.", "Kontakt hinzugefügt");
-                }
+                User NeuerKontakt = dlg.ReturnUser();   //Usernamen des Kontakts abfragen
+                KontaktInKontaktliste(NeuerKontakt);
             }
-            catch (Exception ex)
+        }
+
+        private void KontaktInKontaktliste(User NeuerKontakt)
+        {
+            Kontaktliste.Add(NeuerKontakt);     //Kontakt zur Kontaktliste hinzufügen
+
+            //ListboxKontakte.ItemsSource = Kontaktliste;   //hat immer nur den ersten Kontakt angezeigt
+
+            ListboxKontakte.Items.Clear();  //Listbox leeren
+            foreach (User Kontakt in Kontaktliste)
             {
-                MessageBox.Show(ex.Message, "ERROR");
+                ListboxKontakte.Items.Add(Kontakt); //Alle Kontakte in Listbox übertragen
             }
+            ListboxKontakte.UpdateLayout(); //Layout aktualisieren
         }
     }
 }
+ 

@@ -44,7 +44,7 @@ namespace Chatprogramm_github
         }
 
         //Methoden
-        //bytearray in Methoden einfügen
+        //bytearray in Methoden einfügen    !erledigt!
         public byte[] NachrichtCodieren()
         {
             //Protokoll: Sender,Empfänger,Zeitpunkt,Abgeschickt,Nachricht
