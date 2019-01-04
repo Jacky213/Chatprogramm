@@ -90,16 +90,16 @@ namespace Chatprogramm_github
         public void MessageReceived(string message) //Anzeigen der Message
         {                        
             EmpfangeneNachricht = Nachricht.NachrichtDecodieren(message);
-
             NachrichtDarstellen();
         }
 
-        public void NachrichtDarstellen()
+        public void NachrichtDarstellen()   //Möglichst noch was auslagern
         {
             TextBox Tb_nachricht = new TextBox();   //neue Textbox erstellen
             Tb_nachricht = EmpfangeneNachricht.EmpfangeneNachrichtAusgabe();
             grid_Verlauf.Height = grid_Verlauf.Height + (Tb_nachricht.Height + 1) * Tb_nachricht.FontSize;
             grid_Verlauf.RowDefinitions.Add(new RowDefinition());
+
             if (EmpfangeneNachricht.Sender.Username == Mainuser.Username)
             {
                 Grid.SetColumn(Tb_nachricht, 1);
@@ -113,7 +113,7 @@ namespace Chatprogramm_github
                 Grid.SetRow(Tb_nachricht, row);
                 row++;
 
-                if (Kontaktliste.Contains(EmpfangeneNachricht.Sender))  //Ist der Absender in der Kontaktliste?
+                if (ListeBeinhaltet(Kontaktliste, EmpfangeneNachricht.Sender))  //Ist der Absender in der Kontaktliste?
                 {
                     grid_Verlauf.Children.Add(Tb_nachricht);    //Anzeigen
                 }
@@ -129,7 +129,7 @@ namespace Chatprogramm_github
                             KontaktInKontaktliste(FremderBenutzer);
                             grid_Verlauf.Children.Add(Tb_nachricht);
                         }
-                    }
+                    }                 
                 }
             }
 
@@ -196,14 +196,13 @@ namespace Chatprogramm_github
             if (dlg.DialogResult == true)
             {
                 User NeuerKontakt = dlg.ReturnUser();   //Usernamen des Kontakts abfragen
-                KontaktInKontaktliste(NeuerKontakt);
+                KontaktInKontaktliste(NeuerKontakt);    //Zur Kontaktliste hinzufügen
             }
         }
 
         private void KontaktInKontaktliste(User NeuerKontakt)
         {
             Kontaktliste.Add(NeuerKontakt);     //Kontakt zur Kontaktliste hinzufügen
-
             //ListboxKontakte.ItemsSource = Kontaktliste;   //hat immer nur den ersten Kontakt angezeigt
 
             ListboxKontakte.Items.Clear();  //Listbox leeren
@@ -213,6 +212,19 @@ namespace Chatprogramm_github
             }
             ListboxKontakte.UpdateLayout(); //Layout aktualisieren
         }
+
+        private bool ListeBeinhaltet(List<User> Liste, User Kontakt)    //Hat mit .Contains nicht funktioniert
+        {
+            for (int i = 0; i < Liste.Count ; i++)
+            {
+                if (Liste[i].Username == Kontakt.Username)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 }
  

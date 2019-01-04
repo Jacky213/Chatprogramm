@@ -5,7 +5,7 @@ namespace Chatprogramm_github
     public partial class Username_Dialog : Window
     {   
         private string Username; //Speichert die Eingabe
-        private User Mainuser; //Ziel des Dialogs ist die Erstellung eines Users, des Nutzers dieses Programms; Soll später gespeichert werden
+        private User Benutzer; //Ziel des Dialogs ist die Erstellung eines Users, des Nutzers dieses Programms; Soll später gespeichert werden
 
         // Standardkonstruktor
         public Username_Dialog()
@@ -19,9 +19,9 @@ namespace Chatprogramm_github
             //Die Eingabe wird ausgelesen und gespeichert
             this.Username = txt_Username.Text;
             //Der User wird mit der Eingabe als username erstellt
-            this.Mainuser = new User(this.Username);
+            this.Benutzer = new User(this.Username);
             //Entspricht die Eingabe den Anforderungen des Usernames wird der Dialog geschlossen.
-            if(this.Mainuser.Username != null)
+            if(this.Benutzer.Username != null)
             {
                 this.DialogResult = true;                
             }
@@ -37,7 +37,7 @@ namespace Chatprogramm_github
         //Methode zur Ausgabe des kreeierten Nutzers.
         public User ReturnUser()
         {
-            return this.Mainuser;
+            return this.Benutzer;
         }
     }
 }

@@ -14,11 +14,13 @@ namespace Chatprogramm_github
         private void btn_Speichern_Click(object sender, RoutedEventArgs e)
         {
             Ergebnis = true;
+            DialogResult = true;
         }
 
         private void btn_Ignorieren_Click(object sender, RoutedEventArgs e)
         {
             Ergebnis = false;
+            DialogResult = true;
         }
     }
 }
