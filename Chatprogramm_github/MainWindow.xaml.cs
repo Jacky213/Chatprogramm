@@ -27,6 +27,7 @@ namespace Chatprogramm_github
     // J. Codierte Nachrichten verschicken mit Kontakten abgleichen in Main und in Klasse hinzufügen
     // send and receive in eine Klasse auslagern
     // J. Nachrichten schön darstellen
+    // Usernamen bei unbekanntem Absender anzeigen
 
     // L. Kontakte als Liste und darstellen     !erledigt!
     // zwischen Chats wechseln -> Erst speichern der Nachrichten 
