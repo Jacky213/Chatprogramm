@@ -47,7 +47,7 @@ namespace Chatprogramm_github
         //bytearray in Methoden einfügen    !erledigt!
         public byte[] NachrichtCodieren()
         {
-            //Protokoll: Sender,Empfänger,Zeitpunkt,Abgeschickt,Nachricht
+            //Protokoll: Sender,Empfänger,Zeitpunkt,Abgeschickt,Nachricht 
             string Codierung = "";
             string username = Sender.Username; 
             while (username.Length < 20)
