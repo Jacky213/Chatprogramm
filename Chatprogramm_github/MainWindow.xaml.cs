@@ -45,15 +45,11 @@ namespace Chatprogramm_github
         Sender nachrichtensender; 
         delegate void AddMessage(Nachricht EmpfangeneNachricht);
         const int port = 54546;
-        UdpClient nachrichtenempfänger;    
-
-
-        
+        UdpClient nachrichtenempfänger;            
 
         Thread empfängerThread;
         User Mainuser = new User();
-        //Nachricht ZumSenden;
-        //Nachricht EmpfangeneNachricht;
+        
         int row = 0;
         List<User> Kontaktliste = new List<User>();
 
@@ -66,9 +62,7 @@ namespace Chatprogramm_github
             ////Sender initialisieren
             nachrichtensender = new Sender();
             ////Empfänger initialisieren
-            nachrichtenempfänger = new UdpClient(port);
-
-            
+            nachrichtenempfänger = new UdpClient(port);           
                      
 
             //Paralleler Thread für das Empfangen von Nachrichten anlegen
@@ -96,7 +90,7 @@ namespace Chatprogramm_github
         {
             //Nachricht EmpfangeneNachricht = Nachricht.NachrichtDecodieren(nachricht);
             TextBox Tb_nachricht = new TextBox();   //neue Textbox erstellen
-            Tb_nachricht = EmpfangeneNachricht.EmpfangeneNachrichtAusgabe();
+            Tb_nachricht = EmpfangeneNachricht.NachrichtinTextbox();
             grid_Verlauf.Height = grid_Verlauf.Height + (Tb_nachricht.Height + 1) * Tb_nachricht.FontSize;
             grid_Verlauf.RowDefinitions.Add(new RowDefinition());
 
@@ -166,7 +160,7 @@ namespace Chatprogramm_github
         }
 
         //Methode, die den Usernamen festlegt
-        private void Usernamen_festlegen()      //in Klasse auslagern?!
+        private void Usernamen_festlegen()  
         {
             //Ein Dialog zur Eingabe des Usernamens wird erstellt und angezeigt            
             Username_Dialog dlg = new Username_Dialog();

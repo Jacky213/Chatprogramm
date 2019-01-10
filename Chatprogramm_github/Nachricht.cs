@@ -85,7 +85,7 @@ namespace Chatprogramm_github
         } 
 
 
-        public TextBox EmpfangeneNachrichtAusgabe()
+        public TextBox NachrichtinTextbox()
         {
             TextBox mytxt = new TextBox();
             mytxt.Text = this.Nachrichtentext;
