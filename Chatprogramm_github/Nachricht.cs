@@ -18,7 +18,7 @@ using System.Threading;
 
 namespace Chatprogramm_github
 {
-    class Nachricht
+    public class Nachricht
     {
         //Eigenschaften
         public string Nachrichtentext;

@@ -41,17 +41,19 @@ namespace Chatprogramm_github
     /// </To-Do>
 
     public partial class MainWindow : Window
-    {  
-        //Globale Variablen
-        delegate void AddMessage(string message);
+    {
+        Sender nachrichtensender; 
+        delegate void AddMessage(Nachricht EmpfangeneNachricht);
         const int port = 54546;
-        const string broadcastadress = "255.255.255.255";
-        UdpClient nachrichtenempfänger;// = new UdpClient(new IPEndPoint(new IPAddress(broadcastadress), port));
-        UdpClient nachrichtensender;// = new UdpClient(port);
+        UdpClient nachrichtenempfänger;    
+
+
+        
+
         Thread empfängerThread;
         User Mainuser = new User();
-        Nachricht ZumSenden;
-        Nachricht EmpfangeneNachricht;
+        //Nachricht ZumSenden;
+        //Nachricht EmpfangeneNachricht;
         int row = 0;
         List<User> Kontaktliste = new List<User>();
 
@@ -59,14 +61,15 @@ namespace Chatprogramm_github
         {
             InitializeComponent();
 
-            Usernamen_festlegen();          
-            
-            //Sender initialisieren
-            nachrichtensender = new UdpClient(broadcastadress, port);
-            nachrichtensender.EnableBroadcast = true;
+            Usernamen_festlegen();
 
-            //Empfänger initialisieren
-            nachrichtenempfänger = new UdpClient(port);            
+            ////Sender initialisieren
+            nachrichtensender = new Sender();
+            ////Empfänger initialisieren
+            nachrichtenempfänger = new UdpClient(port);
+
+            
+                     
 
             //Paralleler Thread für das Empfangen von Nachrichten anlegen
             ThreadStart start = new ThreadStart(Receiver);
@@ -75,27 +78,23 @@ namespace Chatprogramm_github
             empfängerThread.Start();
             //grid_Verlauf.Height = 80;
         }
-        
         public void Receiver() //Könnte man in Klasse auslagern??
         {
             IPEndPoint endpoint = new IPEndPoint(IPAddress.Any, port); //Any überwacht alle IP-Adressen des Netzwerks
-            AddMessage messageDelegate = MessageReceived;
-            while(true)
+            AddMessage messageDelegate = NachrichtDarstellen;
+            while (true)
             {
                 byte[] data = nachrichtenempfänger.Receive(ref endpoint); // ref --> Verweis
                 string message = Encoding.Unicode.GetString(data);
-                Dispatcher.Invoke(messageDelegate, message);    //führt einen Delegaten aus
+                Nachricht EmpfangeneNachricht = new Nachricht();
+                EmpfangeneNachricht = Nachricht.NachrichtDecodieren(message);
+                Dispatcher.Invoke(messageDelegate, EmpfangeneNachricht);    //führt einen Delegaten aus
             }
         }
-       
-        public void MessageReceived(string message) //Anzeigen der Message
-        {                        
-            EmpfangeneNachricht = Nachricht.NachrichtDecodieren(message);
-            NachrichtDarstellen();
-        }
 
-        public void NachrichtDarstellen()   //Möglichst noch was auslagern
+        public void NachrichtDarstellen(Nachricht EmpfangeneNachricht)   //Möglichst noch was auslagern
         {
+            //Nachricht EmpfangeneNachricht = Nachricht.NachrichtDecodieren(nachricht);
             TextBox Tb_nachricht = new TextBox();   //neue Textbox erstellen
             Tb_nachricht = EmpfangeneNachricht.EmpfangeneNachrichtAusgabe();
             grid_Verlauf.Height = grid_Verlauf.Height + (Tb_nachricht.Height + 1) * Tb_nachricht.FontSize;
@@ -134,33 +133,26 @@ namespace Chatprogramm_github
                 }
             }
 
-            if (row >= 9)   //Wieder oben anfangen
-            {
-                row = 0;
-            }
+            //if (row >= 9)   //Wieder oben anfangen
+            //{
+            //    row = 0;
+            //}
             //grid_Verlauf.Children.Add(Tb_nachricht);
         }
+    
 
-        //Sendet einen String
-        public void Send(string eingabe) //Könnten wir auch auslagern
+        //Nachricht wird bei Klick auf Sendenbtn gesendet
+        private void btn_Senden_Click(object sender, RoutedEventArgs e)
         {
+            string nachrichtentext = txt_Nachricht.Text;
             if (ListboxKontakte.SelectedIndex >= 0)     //Ist ein Kontakt ausgewählt?
             {
-                ZumSenden = new Nachricht(eingabe, Mainuser, Kontaktliste[ListboxKontakte.SelectedIndex], DateTime.Now, true);  //Könnte eine Exception werfen, wenn kein Kontakt ausgewählt ist
-                byte[] data = ZumSenden.NachrichtCodieren();
-                nachrichtensender.Send(data, data.Length);
+                nachrichtensender.send(new Nachricht(nachrichtentext, Mainuser, Kontaktliste[ListboxKontakte.SelectedIndex], DateTime.Now, true));  //Könnte eine Exception werfen, wenn kein Kontakt ausgewählt ist                
             }
             else
             {
                 MessageBox.Show("Sie müssen einen Kontakt auswählen", "Kein Kontakt ausgewählt");
             }
-        }      
-
-        //Nachricht wird bei Klick auf Sendenbtn gesendet
-        private void btn_Senden_Click(object sender, RoutedEventArgs e)
-        {
-            string nachricht = txt_Nachricht.Text;
-            Send(nachricht);
             txt_Nachricht.Text = "";
         }
 
@@ -168,10 +160,8 @@ namespace Chatprogramm_github
         private void txt_Nachricht_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
-            {
-                string nachricht = txt_Nachricht.Text;
-                Send(nachricht);
-                txt_Nachricht.Text = "";
+            {                
+                btn_Senden_Click(sender, e);               
             }
         }
 
