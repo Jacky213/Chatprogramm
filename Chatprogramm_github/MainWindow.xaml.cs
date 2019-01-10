@@ -156,10 +156,10 @@ namespace Chatprogramm_github
             txt_Nachricht.Text = "";
         }
 
-        //Senden mit Enter
+        //Senden mit Enter Funktioniert noch nicht
         private void txt_Nachricht_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            if (e.Key == Key.Return)
             {                
                 btn_Senden_Click(sender, e);               
             }

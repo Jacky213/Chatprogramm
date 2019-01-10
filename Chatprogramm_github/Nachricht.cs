@@ -54,15 +54,15 @@ namespace Chatprogramm_github
             {
                 username += " ";
             }
-            Codierung += username  + ",";
+            Codierung += username  + "$%&";
             string empfängername = Empfänger.Username;
             while (empfängername.Length < 20)
             {
                 empfängername += " ";
             }
-            Codierung += empfängername + ",";
-            Codierung += Zeitpunkt.ToString() + ",";
-            Codierung += Abgeschickt.ToString() + ",";
+            Codierung += empfängername + "$%&";
+            Codierung += Zeitpunkt.ToString() + "$%&";
+            Codierung += Abgeschickt.ToString() + "$%&";
             Codierung += Nachrichtentext;
 
             byte[] data = Encoding.Unicode.GetBytes(Codierung);
@@ -73,8 +73,8 @@ namespace Chatprogramm_github
         {
             Nachricht Empfang = new Nachricht();
             string[]  EmpfangeneDaten = new string[5];
-
-            EmpfangeneDaten = Codierung.Split(',');
+            
+            EmpfangeneDaten = Codierung.Split(new string[] { "$%&"},StringSplitOptions.None);
             Empfang.Sender.Username = EmpfangeneDaten[0].Trim();
             Empfang.Empfänger.Username = EmpfangeneDaten[1].Trim();
             Empfang.Zeitpunkt = Convert.ToDateTime(EmpfangeneDaten[2]);
