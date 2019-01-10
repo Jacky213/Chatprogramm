@@ -79,7 +79,7 @@ namespace Chatprogramm_github
             Empfang.Empfänger.Username = EmpfangeneDaten[1].Trim();
             Empfang.Zeitpunkt = Convert.ToDateTime(EmpfangeneDaten[2]);
             Empfang.Abgeschickt = Convert.ToBoolean(EmpfangeneDaten[3]);
-            Empfang.Nachrichtentext = EmpfangeneDaten[4]; //Probelm wenn Nachricht ein Komma enthält!!
+            Empfang.Nachrichtentext = EmpfangeneDaten[4];
 
             return Empfang;
         } 
