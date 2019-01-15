@@ -210,6 +210,24 @@ namespace Chatprogramm_github
             return false;
         }
 
+        private void btn_KontaktLöschen_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Kontaktliste.Remove(Kontaktliste[ListboxKontakte.SelectedIndex]);   //Kontakt löschen
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Bitte wählen Sie erst einen Kontakt aus", "Fehler");
+            }
+
+            ListboxKontakte.Items.Clear();  //Listbox leeren
+            foreach (User Kontakt in Kontaktliste)
+            {
+                ListboxKontakte.Items.Add(Kontakt); //Alle Kontakte in Listbox übertragen
+            }
+            ListboxKontakte.UpdateLayout(); //Layout aktualisieren
+        }
     }
 }
  
