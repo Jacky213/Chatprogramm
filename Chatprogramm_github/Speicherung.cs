@@ -87,8 +87,9 @@ namespace Chatprogramm_github
                 Nachricht.Attributes.Append(Zeitpunkt);
                 Nachricht.Attributes.Append(Abgeschickt);
 
+                Chats.AppendChild(Chatkontakt);
                 Chatkontakt.AppendChild(Nachricht);
-                Chatkontakt.AppendChild(Chatkontakt);
+                
             }
 
             //Datei wieder speichern
@@ -100,19 +101,23 @@ namespace Chatprogramm_github
             //Erstellt eine völlig neue Sicherungsdatei, falls das Programm zum ersten mal gestartet wird
             XmlDocument Sicherungsdatei = new XmlDocument();
 
-            XmlNode Mainusernode = Create_Usernode("mainuser", Mainuser.Username);
+            XmlNode Mainusernode = Sicherungsdatei.CreateElement("mainuser"); //Create_Usernode("mainuser", Mainuser.Username);
+            //XmlNode user_Node = Sicherungsdatei.CreateElement("mainuser");
+            XmlAttribute Username = Sicherungsdatei.CreateAttribute("username");
+            Username.Value = Mainuser.Username;
+            
             Sicherungsdatei.AppendChild(Mainusernode);
 
-            XmlNode Chats = Sicherungsdatei.CreateElement("chats");
-            Sicherungsdatei.AppendChild(Chats);
+            XmlNode Chats = Sicherungsdatei.CreateElement("chats");           
+            Mainusernode.AppendChild(Chats);
 
-            XmlNode Create_Usernode(string nodename, string username)   //evtl wieder löschen?!
-            {
-                XmlNode user_Node = Sicherungsdatei.CreateElement(nodename);
-                XmlAttribute Username = Sicherungsdatei.CreateAttribute("username");
-                Username.Value = username;
-                return user_Node;
-            }
+            //XmlNode Create_Usernode(string nodename, string username)   //evtl wieder löschen?!
+            //{
+            //    XmlNode user_Node = Sicherungsdatei.CreateElement(nodename);
+            //    XmlAttribute Username = Sicherungsdatei.CreateAttribute("username");
+            //    Username.Value = username;
+            //    return user_Node;
+            //}
 
             Sicherungsdatei.Save(pfad); //Datei speichern
         }
