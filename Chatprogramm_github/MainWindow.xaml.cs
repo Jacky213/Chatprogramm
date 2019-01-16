@@ -90,7 +90,7 @@ namespace Chatprogramm_github
 
         {
 
-            if (EmpfangeneNachricht.Empfänger==Mainuser) // Geht die Nachricht an den Mainuser?
+            if (EmpfangeneNachricht.Empfänger.Username==Mainuser.Username) // Geht die Nachricht an den Mainuser?
             {
                 if (!(ListeBeinhaltet(Kontaktliste, EmpfangeneNachricht.Sender)))  //Ist der Absender in der Kontaktliste?
                 {
@@ -113,7 +113,7 @@ namespace Chatprogramm_github
                     NachrichtenDarstellen();
                 }
             } 
-            else if(EmpfangeneNachricht.Sender==Mainuser) //Wurde die Nachricht vom Mainuser gesendet?
+            else if(EmpfangeneNachricht.Sender.Username==Mainuser.Username) //Wurde die Nachricht vom Mainuser gesendet?
             {
                 Speicherung.Speichern(Mainuser, EmpfangeneNachricht);
                 NachrichtenDarstellen();
@@ -126,9 +126,12 @@ namespace Chatprogramm_github
         {
             List<Nachricht> darzustellende_Nachrichten = Laden.Nachrichten_Laden(Kontaktliste[ListboxKontakte.SelectedIndex]);
 
+            grid_Verlauf.Children.Clear();
+
             foreach (Nachricht nachricht in darzustellende_Nachrichten)
-            {
+            {                
                 TextBox Tb_nachricht = new TextBox();   //neue Textbox erstellen Tb_nachricht = nachricht.NachrichtinTextbox(); //Die Textbox erhält die Nachricht als Text ist ausgelagert in die Klasse Nachricht
+                Tb_nachricht = nachricht.NachrichtinTextbox();
                 grid_Verlauf.Height = grid_Verlauf.Height + (Tb_nachricht.Height + 1) * Tb_nachricht.FontSize; //Einstellungen für eine schöne Darstellung
                 grid_Verlauf.RowDefinitions.Add(new RowDefinition()); //Neue Zeile wird hinzugefügt
 
@@ -240,6 +243,10 @@ namespace Chatprogramm_github
             ListboxKontakte.UpdateLayout(); //Layout aktualisieren
         }
 
+        private void ListboxKontakte_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            NachrichtenDarstellen();
+        }
     }
 }
  

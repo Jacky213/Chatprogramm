@@ -19,7 +19,7 @@ namespace Chatprogramm_github
             
             //Unter welchem Kontakt soll die Nachricht gespeichert werden
             User Chatpartner = new User();
-            if (empfangeneNachricht.Sender == Mainuser)
+            if (empfangeneNachricht.Sender.Username == Mainuser.Username)
             {
                 Chatpartner = empfangeneNachricht.Empfänger;
             }
@@ -29,7 +29,7 @@ namespace Chatprogramm_github
             }
 
             //Existiert Node schon?
-            XmlNodeList Chatkontakte = Sicherungsdatei.SelectNodes("//mainuser/chats/Chatkontakt"); //Alle ChatkontaktNodes laden
+            XmlNodeList Chatkontakte = Sicherungsdatei.SelectNodes("//mainuser/chats/chatkontakt"); //Alle ChatkontaktNodes laden
 
             bool gefunden = false;
             foreach (XmlNode Chatkontakt in Chatkontakte)   //Liste durchgehen, ob Chatkontakt schon gespeichert ist
@@ -47,8 +47,8 @@ namespace Chatprogramm_github
                     XmlAttribute Abgeschickt = Sicherungsdatei.CreateAttribute("abgeschickt");
                     Sendername.Value = empfangeneNachricht.Sender.Username;
                     Empfängername.Value = empfangeneNachricht.Empfänger.Username;
-                    Zeitpunkt.Value = empfangeneNachricht.Zeitpunkt.ToString();
-                    Abgeschickt.Value = empfangeneNachricht.Abgeschickt.ToString();
+                    Zeitpunkt.Value = empfangeneNachricht.Zeitpunkt.ToFileTime().ToString();
+                    Abgeschickt.Value = empfangeneNachricht.Abgeschickt.ToString();//.ToString();
                     Nachricht.InnerText = empfangeneNachricht.Nachrichtentext;
 
                     Nachricht.Attributes.Append(Sendername);
@@ -67,6 +67,7 @@ namespace Chatprogramm_github
                 //Erstelle ChatkontaktNode
                 XmlNode Chatkontakt = Sicherungsdatei.CreateElement("chatkontakt");
                 XmlAttribute Username = Sicherungsdatei.CreateAttribute("username");
+                Username.Value = Chatpartner.Username;
                 Chatkontakt.Attributes.Append(Username);
 
                 //Erstelle NachrichtNode
@@ -78,7 +79,7 @@ namespace Chatprogramm_github
                 XmlAttribute Abgeschickt = Sicherungsdatei.CreateAttribute("abgeschickt");
                 Sendername.Value = empfangeneNachricht.Sender.Username;
                 Empfängername.Value = empfangeneNachricht.Empfänger.Username;
-                Zeitpunkt.Value = empfangeneNachricht.Zeitpunkt.ToString();
+                Zeitpunkt.Value = empfangeneNachricht.Zeitpunkt.ToFileTime().ToString();//ToString();
                 Abgeschickt.Value = empfangeneNachricht.Abgeschickt.ToString();
                 Nachricht.InnerText = empfangeneNachricht.Nachrichtentext;
 
@@ -105,6 +106,7 @@ namespace Chatprogramm_github
             //XmlNode user_Node = Sicherungsdatei.CreateElement("mainuser");
             XmlAttribute Username = Sicherungsdatei.CreateAttribute("username");
             Username.Value = Mainuser.Username;
+            Mainusernode.Attributes.Append(Username);
             
             Sicherungsdatei.AppendChild(Mainusernode);
 
@@ -130,11 +132,43 @@ namespace Chatprogramm_github
 
         public static List <Nachricht> Nachrichten_Laden(User aktueller_Chatpartner)
         {
-            
+            XmlNode aktueller_Chatkontakt;
+            XmlDocument Sicherungsdatei = new XmlDocument();
+            Sicherungsdatei.Load(pfad);
+
+            List<Nachricht> Nachrichten = new List<Nachricht>();
+            Nachrichten.Clear();
+
+            XmlNodeList Chatkontakte = Sicherungsdatei.SelectNodes("//mainuser/chats/chatkontakt"); //Alle ChatkontaktNodes laden
+
+            foreach(XmlNode Chatkontakt in Chatkontakte)
+            {
+                if(Chatkontakt.Attributes["username"].Value == aktueller_Chatpartner.Username)
+                {
+                    aktueller_Chatkontakt = Chatkontakt;
+                    XmlNodeList nachrichten = aktueller_Chatkontakt.ChildNodes;
+                    foreach (XmlNode nachricht in aktueller_Chatkontakt)
+                    {
+                        string nachrichtentext = nachricht.InnerText;
+                        User Sender = new User(nachricht.Attributes["sendername"].Value);
+                        User Empfänger = new User(nachricht.Attributes["empfängername"].Value);
+                        System.DateTime dateTime = System.DateTime.FromFileTime(System.Convert.ToInt64(nachricht.Attributes["zeitpunkt"].Value));
+                        bool abgeschickt = System.Convert.ToBoolean(nachricht.Attributes["abgeschickt"].Value);
+
+                        Nachricht hilfe = new Nachricht(nachrichtentext, Sender,Empfänger, dateTime,abgeschickt);
+                        Nachrichten.Add(hilfe);
+                    }
+                }
+            }
+            return Nachrichten;
+
+           
+
+
             //Dokument laden und aus den Nachrichten mit dem entsprechenden Chatpartner eine Liste mit Nachrichten erstellen und ausgeben
 
             //Die Nachrichten_Darstellen Funktion muss überarbeitet werden.
-            return new List<Nachricht>();
+            //return new List<Nachricht>();
         }
         
         public static User Username_Laden()

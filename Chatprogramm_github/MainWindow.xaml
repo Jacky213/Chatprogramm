@@ -19,7 +19,7 @@
 
         </Grid.ColumnDefinitions>
 
-        <ListBox x:Name="ListboxKontakte" HorizontalAlignment="Center" Height="320" Margin="0,0,-0.2,0" VerticalAlignment="Center" Width="245" Background="#7F90FF00" Grid.Row="1" Grid.IsSharedSizeScope="True">
+        <ListBox x:Name="ListboxKontakte" HorizontalAlignment="Center" Height="320" Margin="0,0,-0.2,0" VerticalAlignment="Center" Width="245" Background="#7F90FF00" Grid.Row="1" Grid.IsSharedSizeScope="True" SelectionChanged="ListboxKontakte_SelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Username}"/>
