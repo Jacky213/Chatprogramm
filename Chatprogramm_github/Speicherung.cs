@@ -10,10 +10,10 @@ using System.IO;
 
 namespace Chatprogramm_github
 {
+
     class Speicherung
     {
         const string pfad = @"Sicherungsdatei.xml";
-
 
         public static void Speichern(User mainuser, User aktueller_Chatpartner, Nachricht empfangeneNachricht)
         {
@@ -52,6 +52,8 @@ namespace Chatprogramm_github
 
     class Laden
     {
+        const string pfad = @"Sicherungsdatei.xml";
+
         public static List <Nachricht> Nachrichten_Laden(User aktueller_Chatpartner)
         {
             
