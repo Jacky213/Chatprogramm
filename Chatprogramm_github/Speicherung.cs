@@ -25,6 +25,15 @@ namespace Chatprogramm_github
 
                 XmlNode Chatkontakt = Create_Usernode("Chatkontakt", aktueller_Chatpartner.Username);
                 Sicherungsdatei.AppendChild(Chatkontakt);
+
+
+                XmlNode Create_Usernode(string nodename, string username)
+                {
+                    XmlNode user_Node = Sicherungsdatei.CreateElement(nodename);
+                    XmlAttribute Username = Sicherungsdatei.CreateAttribute("username");
+                    Username.Value = username;
+                    return user_Node;
+                }
             }
             else
             {
@@ -34,25 +43,24 @@ namespace Chatprogramm_github
             }        
 
         }
-        XmlNode Create_Usernode(string nodename, string username)
-        {
-            XmlNode user_Node = Sicherungsdatei.CreateElement(nodename);
-            XmlAttribute Username = Sicherungsdatei.CreateAttribute("username");
-            Username.Value = username;
-            return user_Node;
-        }
+
     }
 
-    class <Laden
+    class Laden
     {
-        List <Nachrichten> Nachrichten_Laden(User aktueller_Chatpartner)
+        List <Nachricht> Nachrichten_Laden(User aktueller_Chatpartner)
         {
             //Fehler werfen wenn dok nicht vorhanden
             //Dokument laden und aus den Nachrichten mit dem entsprechenden Chatpartner eine Liste mit Nachrichten erstellen und ausgeben
 
             //Die Nachrichten_Darstellen Funktion muss überarbeitet werden.
+            return new List<Nachricht>();
         }
-
+        
+        public User Username_Laden()
+        {
+        return new User();
+        }
     //FUnktion Überprüfen ob dok gibt und Usernamen auslesen! Nur Hier prüfen und in Speicherung dann nur Load des Doks. Dann Username zurückgeben
     }
 }
