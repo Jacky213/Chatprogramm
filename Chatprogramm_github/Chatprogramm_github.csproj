@@ -74,7 +74,8 @@
       <DependentUpon>FremderKontakt_Dialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Nachricht.cs" />
-    <Compile Include="SenderUndEmpfänger.cs" />
+    <Compile Include="Sender.cs" />
+    <Compile Include="Speicherung.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Username_Dialog.xaml.cs">
       <DependentUpon>Username_Dialog.xaml</DependentUpon>

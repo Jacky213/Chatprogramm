@@ -86,15 +86,17 @@ namespace Chatprogramm_github
             }
         }
 
-        public void NachrichtDarstellen(Nachricht EmpfangeneNachricht)   //Möglichst noch was auslagern
-        {
+        //Braucht eine neue Funktion Nachricht_empfangen, die die neue Nachricht als delegate empfängt, die Speichern-Funktion und anschliessend die NachrichtenDarstellenfunktion aufruft.
+
+        public void NachrichtDarstellen(Nachricht EmpfangeneNachricht)   // Soll nur die Nachrichten der Datei darstellen muss also den Kontakt kennen der dargestellt wird. Listbox.SelectedItemIndex der Kontaktliste
+        {                                                               //Hat keine Argumente mehr. Soll dann die Ladenfunktion aufrufen über eine foreach-Schleife alle Nachrichten darstellen.
             //Nachricht EmpfangeneNachricht = Nachricht.NachrichtDecodieren(nachricht);
             TextBox Tb_nachricht = new TextBox();   //neue Textbox erstellen
             Tb_nachricht = EmpfangeneNachricht.NachrichtinTextbox();
             grid_Verlauf.Height = grid_Verlauf.Height + (Tb_nachricht.Height + 1) * Tb_nachricht.FontSize;
             grid_Verlauf.RowDefinitions.Add(new RowDefinition());
 
-            if (EmpfangeneNachricht.Sender.Username == Mainuser.Username)
+            if (EmpfangeneNachricht.Sender.Username == Mainuser.Username) //Bin ich Sender?
             {
                 Grid.SetColumn(Tb_nachricht, 1);
                 Grid.SetRow(Tb_nachricht, row);
@@ -160,8 +162,8 @@ namespace Chatprogramm_github
         }
 
         //Methode, die den Usernamen festlegt
-        private void Usernamen_festlegen()  
-        {
+        private void Usernamen_festlegen()
+        {//Username Laden Funktion aufrufen und schauen ob was zurück gibt oder nicht.  Wenn nicht Dialog aufrufen
             //Ein Dialog zur Eingabe des Usernamens wird erstellt und angezeigt            
             Username_Dialog dlg = new Username_Dialog();
             dlg.ShowDialog();
