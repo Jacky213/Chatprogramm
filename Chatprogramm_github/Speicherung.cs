@@ -12,10 +12,14 @@ namespace Chatprogramm_github
 {
     class Speicherung
     {
-        void Speichern(User mainuser, User aktueller_Chatpartner)
+        const string pfad = @"Sicherungsdatei.xml";
+
+
+        public static void Speichern(User mainuser, User aktueller_Chatpartner, Nachricht empfangeneNachricht)
         {
+            //Entscheidung: 
             XmlDocument Sicherungsdatei = new XmlDocument();
-            if (!File.Exists(@"Sicherungsdatei_" + mainuser.Username+ @".xml"))
+            if (!File.Exists(pfad))
             {
                 XmlNode Mainusernode = Create_Usernode("mainuser", mainuser.Username);
                 Sicherungsdatei.AppendChild(Mainusernode);
@@ -48,18 +52,25 @@ namespace Chatprogramm_github
 
     class Laden
     {
-        List <Nachricht> Nachrichten_Laden(User aktueller_Chatpartner)
+        public static List <Nachricht> Nachrichten_Laden(User aktueller_Chatpartner)
         {
-            //Fehler werfen wenn dok nicht vorhanden
+            
             //Dokument laden und aus den Nachrichten mit dem entsprechenden Chatpartner eine Liste mit Nachrichten erstellen und ausgeben
 
             //Die Nachrichten_Darstellen Funktion muss überarbeitet werden.
             return new List<Nachricht>();
         }
         
-        public User Username_Laden()
+        public static User Username_Laden()
         {
-        return new User();
+            //Fehler werfen wenn dokument nicht vorhanden                       
+            if (File.Exists(pfad))
+            {
+                XmlDocument Sicherungsdatei = new XmlDocument();
+                Sicherungsdatei.Load(pfad);
+            }
+            
+            return new User();
         }
     //FUnktion Überprüfen ob dok gibt und Usernamen auslesen! Nur Hier prüfen und in Speicherung dann nur Load des Doks. Dann Username zurückgeben
     }
