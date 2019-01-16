@@ -75,7 +75,7 @@ namespace Chatprogramm_github
         public void Receiver() //Könnte man in Klasse auslagern??
         {
             IPEndPoint endpoint = new IPEndPoint(IPAddress.Any, port); //Any überwacht alle IP-Adressen des Netzwerks
-            AddMessage messageDelegate = NachrichtDarstellen;
+            AddMessage messageDelegate = NachrichtEmpfangen;
             while (true)
             {
                 byte[] data = nachrichtenempfänger.Receive(ref endpoint); // ref --> Verweis
@@ -86,34 +86,13 @@ namespace Chatprogramm_github
             }
         }
 
-        //Braucht eine neue Funktion Nachricht_empfangen, die die neue Nachricht als delegate empfängt, die Speichern-Funktion und anschliessend die NachrichtenDarstellenfunktion aufruft.
+        public void NachrichtEmpfangen(Nachricht EmpfangeneNachricht)
 
-        public void NachrichtDarstellen(Nachricht EmpfangeneNachricht)   // Soll nur die Nachrichten der Datei darstellen muss also den Kontakt kennen der dargestellt wird. Listbox.SelectedItemIndex der Kontaktliste
-        {                                                               //Hat keine Argumente mehr. Soll dann die Ladenfunktion aufrufen über eine foreach-Schleife alle Nachrichten darstellen.
-            //Nachricht EmpfangeneNachricht = Nachricht.NachrichtDecodieren(nachricht);
-            TextBox Tb_nachricht = new TextBox();   //neue Textbox erstellen
-            Tb_nachricht = EmpfangeneNachricht.NachrichtinTextbox();
-            grid_Verlauf.Height = grid_Verlauf.Height + (Tb_nachricht.Height + 1) * Tb_nachricht.FontSize;
-            grid_Verlauf.RowDefinitions.Add(new RowDefinition());
+        {
 
-            if (EmpfangeneNachricht.Sender.Username == Mainuser.Username) //Bin ich Sender?
+            if (EmpfangeneNachricht.Empfänger==Mainuser) // Geht die Nachricht an den Mainuser?
             {
-                Grid.SetColumn(Tb_nachricht, 1);
-                Grid.SetRow(Tb_nachricht, row);
-                row++;
-                grid_Verlauf.Children.Add(Tb_nachricht);    //Anzeigen
-            }
-            else if (EmpfangeneNachricht.Empfänger.Username == Mainuser.Username)   //Ist die Nachricht an mich adressiert
-            {
-                Grid.SetColumn(Tb_nachricht, 0);
-                Grid.SetRow(Tb_nachricht, row);
-                row++;
-
-                if (ListeBeinhaltet(Kontaktliste, EmpfangeneNachricht.Sender))  //Ist der Absender in der Kontaktliste?
-                {
-                    grid_Verlauf.Children.Add(Tb_nachricht);    //Anzeigen
-                }
-                else    //Absender nicht in Kontaktliste
+                if (!(ListeBeinhaltet(Kontaktliste, EmpfangeneNachricht.Sender)))  //Ist der Absender in der Kontaktliste?
                 {
                     FremderKontakt_Dialog fremderKontakt_Dialog1 = new FremderKontakt_Dialog();
                     fremderKontakt_Dialog1.ShowDialog();
@@ -123,17 +102,53 @@ namespace Chatprogramm_github
                         {
                             User FremderBenutzer = new User(EmpfangeneNachricht.Sender.Username);
                             KontaktInKontaktliste(FremderBenutzer);
-                            grid_Verlauf.Children.Add(Tb_nachricht);
+                            Speicherung.Speichern(Mainuser, EmpfangeneNachricht); //Speichern des Kontaktes
+                            NachrichtenDarstellen(); //Darstellen aller Nachrichten
                         }
-                    }                 
+                    }
                 }
+                else
+                {
+                    Speicherung.Speichern(Mainuser, EmpfangeneNachricht); //Wenn von bekanntem Kontakt kommt
+                    NachrichtenDarstellen();
+                }
+            } 
+            else if(EmpfangeneNachricht.Sender==Mainuser) //Wurde die Nachricht vom Mainuser gesendet?
+            {
+                Speicherung.Speichern(Mainuser, EmpfangeneNachricht);
+                NachrichtenDarstellen();
             }
+             
+        }
 
-            //if (row >= 9)   //Wieder oben anfangen
-            //{
-            //    row = 0;
-            //}
-            //grid_Verlauf.Children.Add(Tb_nachricht);
+        
+        public void NachrichtenDarstellen()   
+        {
+            List<Nachricht> darzustellende_Nachrichten = Laden.Nachrichten_Laden(Kontaktliste[ListboxKontakte.SelectedIndex]);
+
+            foreach (Nachricht nachricht in darzustellende_Nachrichten)
+            {
+                TextBox Tb_nachricht = new TextBox();   //neue Textbox erstellen Tb_nachricht = nachricht.NachrichtinTextbox(); //Die Textbox erhält die Nachricht als Text ist ausgelagert in die Klasse Nachricht
+                grid_Verlauf.Height = grid_Verlauf.Height + (Tb_nachricht.Height + 1) * Tb_nachricht.FontSize; //Einstellungen für eine schöne Darstellung
+                grid_Verlauf.RowDefinitions.Add(new RowDefinition()); //Neue Zeile wird hinzugefügt
+
+                if (nachricht.Sender.Username == Mainuser.Username) //Bin ich Sender?
+                {
+                    Grid.SetColumn(Tb_nachricht, 1);
+                    Grid.SetRow(Tb_nachricht, row);
+                    row++;
+                    grid_Verlauf.Children.Add(Tb_nachricht);    //Anzeigen
+                }
+                else if (nachricht.Empfänger.Username == Mainuser.Username)   //Ist die Nachricht an mich adressiert
+                {
+                    Grid.SetColumn(Tb_nachricht, 0);
+                    Grid.SetRow(Tb_nachricht, row);
+                    row++;
+                    grid_Verlauf.Children.Add(Tb_nachricht);    //Anzeigen
+                }               
+            }         
+          
+         
         }
     
 
@@ -163,15 +178,9 @@ namespace Chatprogramm_github
 
         //Methode, die den Usernamen festlegt
         private void Usernamen_festlegen()
-        {//Username Laden Funktion aufrufen und schauen ob was zurück gibt oder nicht.  Wenn nicht Dialog aufrufen
-            //Ein Dialog zur Eingabe des Usernamens wird erstellt und angezeigt            
-            Username_Dialog dlg = new Username_Dialog();
-            dlg.ShowDialog();
-            if (dlg.DialogResult == true)
-            {
-                Mainuser = dlg.ReturnUser();
-            }
-            //War die Erstellung des Users erfolgreich, wird eine Messagebox angezeigt
+        {
+            //Es wird überprüft, ob es schon einen Usernamen des Mainusers gibt. In der Funktion Mainuser_Laden wird  automatisch nach einem Namen gefragt, wenn es noch keinen gibt.
+            Mainuser = Laden.Username_Laden();
             MessageBox.Show("Sie haben sich als \"" + Mainuser.Username + "\" angemeldet.", "Anmeldung erfolgreich");
             //Usernameeingabe war erfolgreich wird auch ausgegeben.
         }
@@ -230,6 +239,7 @@ namespace Chatprogramm_github
             }
             ListboxKontakte.UpdateLayout(); //Layout aktualisieren
         }
+
     }
 }
  
