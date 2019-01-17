@@ -57,7 +57,11 @@ namespace Chatprogramm_github
         {
             InitializeComponent();
 
-            Usernamen_festlegen();
+            Mainuser = Laden.Username_Laden();
+            MessageBox.Show("Sie haben sich als \"" + Mainuser.Username + "\" angemeldet.", "Anmeldung erfolgreich");
+
+            Kontaktliste = Laden.Kontakte_laden();
+            KontaktlisteinListbox();
 
             ////Sender initialisieren
             nachrichtensender = new Sender();
@@ -101,7 +105,8 @@ namespace Chatprogramm_github
                         if (fremderKontakt_Dialog1.Ergebnis == true)    //Benutzer soll als Kontakt gespeichert werden
                         {
                             User FremderBenutzer = new User(EmpfangeneNachricht.Sender.Username);
-                            KontaktInKontaktliste(FremderBenutzer);
+                            Kontaktliste.Add(FremderBenutzer);
+                            KontaktlisteinListbox();
                             Speicherung.Speichern(Mainuser, EmpfangeneNachricht); //Speichern des Kontaktes
                             NachrichtenDarstellen(); //Darstellen aller Nachrichten
                         }
@@ -124,34 +129,43 @@ namespace Chatprogramm_github
         
         public void NachrichtenDarstellen()   
         {
-            List<Nachricht> darzustellende_Nachrichten = Laden.Nachrichten_Laden(Kontaktliste[ListboxKontakte.SelectedIndex]);
+            if(!(ListboxKontakte.SelectedIndex==-1))
+            {
+                List<Nachricht> darzustellende_Nachrichten = Laden.Nachrichten_Laden(Kontaktliste[ListboxKontakte.SelectedIndex]);
 
-            grid_Verlauf.Children.Clear();
+                grid_Verlauf.Children.Clear();
 
-            foreach (Nachricht nachricht in darzustellende_Nachrichten)
-            {                
-                TextBox Tb_nachricht = new TextBox();   //neue Textbox erstellen Tb_nachricht = nachricht.NachrichtinTextbox(); //Die Textbox erhält die Nachricht als Text ist ausgelagert in die Klasse Nachricht
-                Tb_nachricht = nachricht.NachrichtinTextbox();
-                grid_Verlauf.Height = grid_Verlauf.Height + (Tb_nachricht.Height + 1) * Tb_nachricht.FontSize; //Einstellungen für eine schöne Darstellung
-                grid_Verlauf.RowDefinitions.Add(new RowDefinition()); //Neue Zeile wird hinzugefügt
-
-                if (nachricht.Sender.Username == Mainuser.Username) //Bin ich Sender?
+                foreach (Nachricht nachricht in darzustellende_Nachrichten)
                 {
-                    Grid.SetColumn(Tb_nachricht, 1);
-                    Grid.SetRow(Tb_nachricht, row);
-                    row++;
-                    grid_Verlauf.Children.Add(Tb_nachricht);    //Anzeigen
+                    TextBox Tb_nachricht = new TextBox();   //neue Textbox erstellen Tb_nachricht = nachricht.NachrichtinTextbox(); //Die Textbox erhält die Nachricht als Text ist ausgelagert in die Klasse Nachricht
+                    Tb_nachricht = nachricht.NachrichtinTextbox();
+                    grid_Verlauf.Height = grid_Verlauf.Height + (Tb_nachricht.Height + 1) * Tb_nachricht.FontSize; //Einstellungen für eine schöne Darstellung
+                    grid_Verlauf.RowDefinitions.Add(new RowDefinition()); //Neue Zeile wird hinzugefügt
+
+                    if (nachricht.Sender.Username == Mainuser.Username) //Bin ich Sender?
+                    {
+                        Grid.SetColumn(Tb_nachricht, 1);
+                        Grid.SetRow(Tb_nachricht, row);
+                        row++;
+                        grid_Verlauf.Children.Add(Tb_nachricht);    //Anzeigen
+                    }
+                    else if (nachricht.Empfänger.Username == Mainuser.Username)   //Ist die Nachricht an mich adressiert
+                    {
+                        Grid.SetColumn(Tb_nachricht, 0);
+                        Grid.SetRow(Tb_nachricht, row);
+                        row++;
+                        grid_Verlauf.Children.Add(Tb_nachricht);    //Anzeigen
+                    }
                 }
-                else if (nachricht.Empfänger.Username == Mainuser.Username)   //Ist die Nachricht an mich adressiert
-                {
-                    Grid.SetColumn(Tb_nachricht, 0);
-                    Grid.SetRow(Tb_nachricht, row);
-                    row++;
-                    grid_Verlauf.Children.Add(Tb_nachricht);    //Anzeigen
-                }               
-            }         
-          
-         
+            }
+            else
+            {
+                grid_Verlauf.Children.Clear();
+
+            }
+
+
+
         }
     
 
@@ -179,15 +193,8 @@ namespace Chatprogramm_github
             }
         }
 
-        //Methode, die den Usernamen festlegt
-        private void Usernamen_festlegen()
-        {
-            //Es wird überprüft, ob es schon einen Usernamen des Mainusers gibt. In der Funktion Mainuser_Laden wird  automatisch nach einem Namen gefragt, wenn es noch keinen gibt.
-            Mainuser = Laden.Username_Laden();
-            MessageBox.Show("Sie haben sich als \"" + Mainuser.Username + "\" angemeldet.", "Anmeldung erfolgreich");
-            //Usernameeingabe war erfolgreich wird auch ausgegeben.
-        }
-
+       
+      
         private void btn_KontaktHinzufügen_Click(object sender, RoutedEventArgs e)  //Kontakt hinzufügen
         {
             Username_Dialog dlg = new Username_Dialog();
@@ -195,13 +202,13 @@ namespace Chatprogramm_github
             if (dlg.DialogResult == true)
             {
                 User NeuerKontakt = dlg.ReturnUser();   //Usernamen des Kontakts abfragen
-                KontaktInKontaktliste(NeuerKontakt);    //Zur Kontaktliste hinzufügen
+                Kontaktliste.Add(NeuerKontakt);
+                KontaktlisteinListbox();    //Zur Kontaktliste hinzufügen
             }
         }
 
-        private void KontaktInKontaktliste(User NeuerKontakt)
+        private void KontaktlisteinListbox()
         {
-            Kontaktliste.Add(NeuerKontakt);     //Kontakt zur Kontaktliste hinzufügen
             //ListboxKontakte.ItemsSource = Kontaktliste;   //hat immer nur den ersten Kontakt angezeigt
 
             ListboxKontakte.Items.Clear();  //Listbox leeren
@@ -228,7 +235,10 @@ namespace Chatprogramm_github
         {
             try
             {
+                Speicherung.Kontakt_löschen(Kontaktliste[ListboxKontakte.SelectedIndex]);
                 Kontaktliste.Remove(Kontaktliste[ListboxKontakte.SelectedIndex]);   //Kontakt löschen
+                grid_Verlauf.Children.Clear();
+               
             }
             catch (Exception ex)
             {

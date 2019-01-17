@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using System.IO;
+using System.Windows;
 
 
 namespace Chatprogramm_github
@@ -123,6 +124,26 @@ namespace Chatprogramm_github
 
             Sicherungsdatei.Save(pfad); //Datei speichern
         }
+
+        public static void Kontakt_löschen(User kontakt)
+        {
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(pfad);
+
+            XmlNode chats = xmlDoc.SelectSingleNode("//mainuser/chats");
+            XmlNodeList chatkontakte = xmlDoc.SelectNodes("//mainuser/chats/chatkontakt");
+
+            foreach(XmlNode chatkontakt in chatkontakte)
+            {
+                if(chatkontakt.Attributes["username"].Value==kontakt.Username)
+                {
+                    chats.RemoveChild(chatkontakt);
+                    MessageBox.Show("Kontakt wurde gelöscht");
+                }
+                
+            }
+            xmlDoc.Save(pfad);
+        }
     }
 
     class Laden
@@ -171,7 +192,7 @@ namespace Chatprogramm_github
             //return new List<Nachricht>();
         }
         
-        public static User Username_Laden()
+        public static User Username_Laden() //Hier auch Kontakte laden
         {                     
             User Mainuser = new User();
             if (File.Exists(pfad))
@@ -197,6 +218,26 @@ namespace Chatprogramm_github
                 Speicherung.NeueSicherungsdateiErstellen(Mainuser);
             }
             return Mainuser;
+        }
+
+        public static List<User> Kontakte_laden()
+        {
+            List<User> Kontaktliste = new List<User>();
+
+            if (File.Exists(pfad))
+            {
+                XmlDocument Sicherungsdatei = new XmlDocument();
+                Sicherungsdatei.Load(pfad);
+                XmlNodeList Kontakte = Sicherungsdatei.SelectNodes("//mainuser/chats/chatkontakt");
+               foreach(XmlNode Kontakt in Kontakte)
+                {
+                    User kontakt = new User(Kontakt.Attributes["username"].Value);
+                    Kontaktliste.Add(kontakt);
+                }
+                
+            }
+
+            return Kontaktliste;
         }
     }
 }
