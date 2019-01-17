@@ -4,18 +4,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -42,32 +34,32 @@ namespace Chatprogramm_github
 
     public partial class MainWindow : Window
     {
-        Sender nachrichtensender; 
+        //Globale Variablen und Objekte
         delegate void AddMessage(Nachricht EmpfangeneNachricht);
         const int port = 54546;
-        UdpClient nachrichtenempfänger;            
-
+        Sender nachrichtensender;
+        UdpClient nachrichtenempfänger;
         Thread empfängerThread;
-        User Mainuser = new User();
-        
+        User Mainuser = new User();        
         int row = 0;
         List<User> Kontaktliste = new List<User>();
 
-        public MainWindow()
+        public MainWindow() //Initialisierung
         {
             InitializeComponent();
 
+            //Mainuser abfragen/initialisieren
             Mainuser = Laden.Username_Laden();
             MessageBox.Show("Sie haben sich als \"" + Mainuser.Username + "\" angemeldet.", "Anmeldung erfolgreich");
 
+            //Kontaktliste abfragen
             Kontaktliste = Laden.Kontakte_laden();
             KontaktlisteinListbox();
 
-            ////Sender initialisieren
+            //Sender initialisieren
             nachrichtensender = new Sender();
-            ////Empfänger initialisieren
-            nachrichtenempfänger = new UdpClient(port);           
-                     
+            //Empfänger initialisieren
+            nachrichtenempfänger = new UdpClient(port);                    
 
             //Paralleler Thread für das Empfangen von Nachrichten anlegen
             ThreadStart start = new ThreadStart(Receiver);
@@ -76,6 +68,7 @@ namespace Chatprogramm_github
             empfängerThread.Start();
             //grid_Verlauf.Height = 80;
         }
+
         public void Receiver() //Könnte man in Klasse auslagern??
         {
             IPEndPoint endpoint = new IPEndPoint(IPAddress.Any, port); //Any überwacht alle IP-Adressen des Netzwerks
@@ -91,9 +84,7 @@ namespace Chatprogramm_github
         }
 
         public void NachrichtEmpfangen(Nachricht EmpfangeneNachricht)
-
         {
-
             if (EmpfangeneNachricht.Empfänger.Username==Mainuser.Username) // Geht die Nachricht an den Mainuser?
             {
                 if (!(ListeBeinhaltet(Kontaktliste, EmpfangeneNachricht.Sender)))  //Ist der Absender in der Kontaktliste?
@@ -122,8 +113,7 @@ namespace Chatprogramm_github
             {
                 Speicherung.Speichern(Mainuser, EmpfangeneNachricht);
                 NachrichtenDarstellen();
-            }
-             
+            }             
         }
 
         
@@ -161,13 +151,8 @@ namespace Chatprogramm_github
             else
             {
                 grid_Verlauf.Children.Clear();
-
             }
-
-
-
-        }
-    
+        }    
 
         //Nachricht wird bei Klick auf Sendenbtn gesendet
         private void btn_Senden_Click(object sender, RoutedEventArgs e)
@@ -191,9 +176,7 @@ namespace Chatprogramm_github
             {                
                 btn_Senden_Click(sender, e);               
             }
-        }
-
-       
+        }       
       
         private void btn_KontaktHinzufügen_Click(object sender, RoutedEventArgs e)  //Kontakt hinzufügen
         {
@@ -259,4 +242,3 @@ namespace Chatprogramm_github
         }
     }
 }
- 

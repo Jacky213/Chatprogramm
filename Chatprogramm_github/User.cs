@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Chatprogramm_github
+﻿namespace Chatprogramm_github
 {   //Klasse, die Users definiert. Alle Nutzer einschliesslich des Nutzers und der Kontakte sind Users
     public class User
     {

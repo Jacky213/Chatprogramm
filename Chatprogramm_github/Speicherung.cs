@@ -90,8 +90,7 @@ namespace Chatprogramm_github
                 Nachricht.Attributes.Append(Abgeschickt);
 
                 Chats.AppendChild(Chatkontakt);
-                Chatkontakt.AppendChild(Nachricht);
-                
+                Chatkontakt.AppendChild(Nachricht);                
             }
 
             //Datei wieder speichern
@@ -113,14 +112,6 @@ namespace Chatprogramm_github
 
             XmlNode Chats = Sicherungsdatei.CreateElement("chats");           
             Mainusernode.AppendChild(Chats);
-
-            //XmlNode Create_Usernode(string nodename, string username)   //evtl wieder löschen?!
-            //{
-            //    XmlNode user_Node = Sicherungsdatei.CreateElement(nodename);
-            //    XmlAttribute Username = Sicherungsdatei.CreateAttribute("username");
-            //    Username.Value = username;
-            //    return user_Node;
-            //}
 
             Sicherungsdatei.Save(pfad); //Datei speichern
         }
@@ -153,6 +144,7 @@ namespace Chatprogramm_github
 
         public static List <Nachricht> Nachrichten_Laden(User aktueller_Chatpartner)
         {
+            //Dokument laden und aus den Nachrichten mit dem entsprechenden Chatpartner eine Liste mit Nachrichten erstellen und ausgeben
             XmlNode aktueller_Chatkontakt;
             XmlDocument Sicherungsdatei = new XmlDocument();
             Sicherungsdatei.Load(pfad);
@@ -182,14 +174,6 @@ namespace Chatprogramm_github
                 }
             }
             return Nachrichten;
-
-           
-
-
-            //Dokument laden und aus den Nachrichten mit dem entsprechenden Chatpartner eine Liste mit Nachrichten erstellen und ausgeben
-
-            //Die Nachrichten_Darstellen Funktion muss überarbeitet werden.
-            //return new List<Nachricht>();
         }
         
         public static User Username_Laden() //Hier auch Kontakte laden
@@ -204,8 +188,7 @@ namespace Chatprogramm_github
             }
             else
             {
-                //Ein Dialog zur Eingabe des Usernamens wird erstellt und angezeigt            
-                
+                //Ein Dialog zur Eingabe des Usernamens wird erstellt und angezeigt
                 Username_Dialog dlg = new Username_Dialog();
                 dlg.ShowDialog();
                 if (dlg.DialogResult == true)
@@ -213,7 +196,7 @@ namespace Chatprogramm_github
                     Mainuser = dlg.ReturnUser();
                 }
                 //War die Erstellung des Users erfolgreich, wird eine Messagebox angezeigt
-                //MessageBox.Show("Sie haben sich als \"" + Mainuser.Username + "\" angemeldet.", "Anmeldung erfolgreich");
+                ////MessageBox.Show("Sie haben sich als \"" + Mainuser.Username + "\" angemeldet.", "Anmeldung erfolgreich");
                 //Usernameeingabe war erfolgreich und wird ausgegeben.
                 Speicherung.NeueSicherungsdateiErstellen(Mainuser);
             }
@@ -230,13 +213,11 @@ namespace Chatprogramm_github
                 Sicherungsdatei.Load(pfad);
                 XmlNodeList Kontakte = Sicherungsdatei.SelectNodes("//mainuser/chats/chatkontakt");
                foreach(XmlNode Kontakt in Kontakte)
-                {
+               {
                     User kontakt = new User(Kontakt.Attributes["username"].Value);
                     Kontaktliste.Add(kontakt);
-                }
-                
+               }                
             }
-
             return Kontaktliste;
         }
     }
