@@ -1,4 +1,10 @@
-﻿/* 14.12.2018 von Luca Katzenberger und Jacqueline Kaefer
+﻿/* Header
+ * 
+ * 24.01.2019, Jacqueline Kaefer, Luca Katzenberger
+ * 
+ * Dies ist die Mainklasse unseres Chatprogramms.
+ * Sie beinhaltet die Kontaktliste und die Methoden zum Nachrichten empfangen und darstellen.
+ * Außerdem werden aus Ihr alle Dialoge und Funktionen, beispielsweise zum Speichern und Laden aufgerufen.
  * 
  */
 
@@ -14,24 +20,6 @@ using System.Threading;
 
 namespace Chatprogramm_github
 {
-    /// <To-Do>
-
-    // J. Codierte Nachrichten verschicken mit Kontakten abgleichen in Main und in Klasse hinzufügen
-    // send and receive in eine Klasse auslagern
-    // J. Nachrichten schön darstellen
-    // Usernamen bei unbekanntem Absender anzeigen
-
-    // L. Kontakte als Liste und darstellen     !erledigt!
-    // zwischen Chats wechseln -> Erst speichern der Nachrichten 
-    // Kontakthinzufügenbutton  !erledigt!
-    // Kontakte abgleichen bei neuer Nachricht und Mitteilung an User ob zu Kontakten hinzufügen 
-    // neuer Dialog zur Entscheidung    !erledigt!
-    // Button Kontakt löschen    !erledigt!
-
-    // Speicherung in XML-Format zu zweit nach Weihnachten
-
-    /// </To-Do>
-
     public partial class MainWindow : Window
     {
         //Globale Variablen und Objekte
