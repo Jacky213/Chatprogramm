@@ -70,17 +70,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="FremderKontakt_Dialog.xaml.cs">
-      <DependentUpon>FremderKontakt_Dialog.xaml</DependentUpon>
+    <Compile Include="UnknownUserDialog.xaml.cs">
+      <DependentUpon>UnknownUserDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Message.cs" />
     <Compile Include="Sender.cs" />
-    <Compile Include="Speicherung.cs" />
+    <Compile Include="SaveAndLoad.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Username_Dialog.xaml.cs">
       <DependentUpon>Username_Dialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="FremderKontakt_Dialog.xaml">
+    <Page Include="UnknownUserDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
