@@ -3,7 +3,7 @@
  * 24.01.2019, Jacqueline Kaefer, Luca Katzenberger
  * 
  * Dies ist die Mainklasse unseres Chatprogramms.
- * Sie beinhaltet die Kontaktliste und die Methoden zum Nachrichten empfangen und darstellen.
+ * Sie beinhaltet die contactlist und die Methoden zum Nachrichten empfangen und darstellen.
  * Außerdem werden aus Ihr alle Dialoge und Funktionen, beispielsweise zum Speichern und Laden aufgerufen.
  * 
  */
@@ -22,112 +22,112 @@ namespace Chatprogramm_github
 {
     public partial class MainWindow : Window
     {
-        //Globale Variablen und Objekte
-        delegate void AddMessage(Nachricht EmpfangeneNachricht);
+        #region Variables
+        delegate void AddMessage(Message receivedmessage);
         const int port = 54546;
-        Sender nachrichtensender;
-        UdpClient nachrichtenempfänger;
-        Thread empfängerThread;
+        Sender messagesender;
+        UdpClient messagereceiver;
+        Thread receiverthread;
         User Mainuser = new User();        
         int row = 0;
-        List<User> Kontaktliste = new List<User>();
+        List<User> contactlist = new List<User>();
+        #endregion
 
         public MainWindow() //Initialisierung
         {
             InitializeComponent();
 
             //Mainuser abfragen/initialisieren
-            Mainuser = Laden.Username_Laden();
+            Mainuser = Load.LoadUsername();
             MessageBox.Show("Sie haben sich als \"" + Mainuser.Username + "\" angemeldet.", "Anmeldung erfolgreich");
 
-            //Kontaktliste abfragen
-            Kontaktliste = Laden.Kontakte_laden();
-            KontaktlisteinListbox();
+            //contactlist abfragen
+            contactlist = Load.LoadContacts();
+            DisplayContactlistinListbox();
 
             //Sender initialisieren
-            nachrichtensender = new Sender();
+            messagesender = new Sender();
             //Empfänger initialisieren
-            nachrichtenempfänger = new UdpClient(port);                    
+            messagereceiver = new UdpClient(port);                    
 
             //Paralleler Thread für das Empfangen von Nachrichten anlegen
             ThreadStart start = new ThreadStart(Receiver);
-            empfängerThread = new Thread(start);
-            empfängerThread.IsBackground = true;
-            empfängerThread.Start();
-            //grid_Verlauf.Height = 80;
+            receiverthread = new Thread(start);
+            receiverthread.IsBackground = true;
+            receiverthread.Start();
         }
 
         public void Receiver() //Könnte man in Klasse auslagern??
         {
             IPEndPoint endpoint = new IPEndPoint(IPAddress.Any, port); //Any überwacht alle IP-Adressen des Netzwerks
-            AddMessage messageDelegate = NachrichtEmpfangen;
+            AddMessage messageDelegate = MessageReceived;
             while (true)
             {
-                byte[] data = nachrichtenempfänger.Receive(ref endpoint); // ref --> Verweis
+                byte[] data = messagereceiver.Receive(ref endpoint); // ref --> Verweis
                 string message = Encoding.Unicode.GetString(data);
-                Nachricht EmpfangeneNachricht = new Nachricht();
-                EmpfangeneNachricht = Nachricht.NachrichtDecodieren(message);
-                Dispatcher.Invoke(messageDelegate, EmpfangeneNachricht);    //führt einen Delegaten aus
+                Message receivedmessage = new Message();
+                receivedmessage = Message.DecodeMessage(message);
+                Dispatcher.Invoke(messageDelegate, receivedmessage);    //führt einen Delegaten aus
             }
         }
 
-        public void NachrichtEmpfangen(Nachricht EmpfangeneNachricht)
+        public void MessageReceived(Message receivedmessage)
         {
-            if (EmpfangeneNachricht.Empfänger.Username==Mainuser.Username) // Geht die Nachricht an den Mainuser?
+            if (receivedmessage.Receiver.Username==Mainuser.Username) // Geht die Nachricht an den Mainuser?
             {
-                if (!(ListeBeinhaltet(Kontaktliste, EmpfangeneNachricht.Sender)))  //Ist der Absender in der Kontaktliste?
+                if (!(listcontains(contactlist, receivedmessage.Sender)))  //Ist der Absender in der contactlist?
                 {
-                    FremderKontakt_Dialog fremderKontakt_Dialog1 = new FremderKontakt_Dialog();
-                    fremderKontakt_Dialog1.ShowDialog();
-                    if (fremderKontakt_Dialog1.DialogResult == true)
+                    UnknownUserDialog unknownsenderdialog1 = new UnknownUserDialog(receivedmessage.Sender);
+                    unknownsenderdialog1.ShowDialog();
+                    if (unknownsenderdialog1.DialogResult == true)
                     {
-                        if (fremderKontakt_Dialog1.Ergebnis == true)    //Benutzer soll als Kontakt gespeichert werden
+                        if (unknownsenderdialog1.result == true)    //Benutzer soll als Kontakt gespeichert werden
                         {
-                            User FremderBenutzer = new User(EmpfangeneNachricht.Sender.Username);
-                            Kontaktliste.Add(FremderBenutzer);
-                            KontaktlisteinListbox();
-                            Speicherung.Speichern(Mainuser, EmpfangeneNachricht); //Speichern des Kontaktes
-                            NachrichtenDarstellen(); //Darstellen aller Nachrichten
+                            User unknownuser = new User(receivedmessage.Sender.Username);
+                            contactlist.Add(unknownuser);
+                            DisplayContactlistinListbox();
+                            Save.SaveData(Mainuser, receivedmessage); //Speichern des Kontaktes
+                            DisplayMessage(); //Darstellen aller Nachrichten
                         }
                     }
                 }
                 else
                 {
-                    Speicherung.Speichern(Mainuser, EmpfangeneNachricht); //Wenn von bekanntem Kontakt kommt
-                    NachrichtenDarstellen();
+                    Save.SaveData(Mainuser, receivedmessage); //Wenn von bekanntem Kontakt kommt
+                    DisplayMessage();
                 }
             } 
-            else if(EmpfangeneNachricht.Sender.Username==Mainuser.Username) //Wurde die Nachricht vom Mainuser gesendet?
+            else if(receivedmessage.Sender.Username==Mainuser.Username) //Wurde die Nachricht vom Mainuser gesendet?
             {
-                Speicherung.Speichern(Mainuser, EmpfangeneNachricht);
-                NachrichtenDarstellen();
+                Save.SaveData(Mainuser, receivedmessage);
+                DisplayMessage();
             }             
         }
 
         
-        public void NachrichtenDarstellen()   
+        public void DisplayMessage()   
         {
-            if(!(ListboxKontakte.SelectedIndex==-1))
+            if(!(ListboxContacts.SelectedIndex==-1))
             {
-                List<Nachricht> darzustellende_Nachrichten = Laden.Nachrichten_Laden(Kontaktliste[ListboxKontakte.SelectedIndex]);
+                List<Message> savedmessages = Load.LoadMessages(contactlist[ListboxContacts.SelectedIndex]);
 
                 grid_Verlauf.Children.Clear();
 
-                foreach (Nachricht nachricht in darzustellende_Nachrichten)
+                foreach (Message message in savedmessages)
                 {
-                    TextBox Tb_nachricht = new TextBox();   //neue Textbox erstellen Tb_nachricht = nachricht.NachrichtinTextbox(); //Die Textbox erhält die Nachricht als Text ist ausgelagert in die Klasse Nachricht
-                    Tb_nachricht = nachricht.NachrichtinTextbox();
+                    TextBox Tb_nachricht = new TextBox();   //neue Textbox erstellen
+                    Tb_nachricht = message.MessageinTextbox();
                     grid_Verlauf.Height = grid_Verlauf.Height + (Tb_nachricht.Height + 1) * Tb_nachricht.FontSize; //Einstellungen für eine schöne Darstellung
                     grid_Verlauf.RowDefinitions.Add(new RowDefinition()); //Neue Zeile wird hinzugefügt
 
-                    if (nachricht.Sender.Username == Mainuser.Username) //Bin ich Sender?
+                    if (message.Sender.Username == Mainuser.Username) //Bin ich Sender?
                     {
                         Grid.SetColumn(Tb_nachricht, 1);
                         Grid.SetRow(Tb_nachricht, row);
                         row++;
                         grid_Verlauf.Children.Add(Tb_nachricht);    //Anzeigen
                     }
-                    else if (nachricht.Empfänger.Username == Mainuser.Username)   //Ist die Nachricht an mich adressiert
+                    else if (message.Receiver.Username == Mainuser.Username)   //Ist die Nachricht an mich adressiert
                     {
                         Grid.SetColumn(Tb_nachricht, 0);
                         Grid.SetRow(Tb_nachricht, row);
@@ -143,18 +143,18 @@ namespace Chatprogramm_github
         }    
 
         //Nachricht wird bei Klick auf Sendenbtn gesendet
-        private void btn_Senden_Click(object sender, RoutedEventArgs e)
+        private void btn_Send_Click(object sender, RoutedEventArgs e)
         {
-            string nachrichtentext = txt_Nachricht.Text;
-            if (ListboxKontakte.SelectedIndex >= 0)     //Ist ein Kontakt ausgewählt?
+            string messagetext = txt_Message.Text;
+            if (ListboxContacts.SelectedIndex >= 0)     //Ist ein Kontakt ausgewählt?
             {
-                nachrichtensender.send(new Nachricht(nachrichtentext, Mainuser, Kontaktliste[ListboxKontakte.SelectedIndex], DateTime.Now, true));  //Könnte eine Exception werfen, wenn kein Kontakt ausgewählt ist                
+                messagesender.send(new Message(messagetext, Mainuser, contactlist[ListboxContacts.SelectedIndex], DateTime.Now, true));  //Könnte eine Exception werfen, wenn kein Kontakt ausgewählt ist                
+                txt_Message.Text = "";
             }
             else
             {
                 MessageBox.Show("Sie müssen einen Kontakt auswählen", "Kein Kontakt ausgewählt");
             }
-            txt_Nachricht.Text = "";
         }
 
         //Senden mit Enter Funktioniert noch nicht
@@ -162,39 +162,41 @@ namespace Chatprogramm_github
         {
             if (e.Key == Key.Return)
             {                
-                btn_Senden_Click(sender, e);               
+                btn_Send_Click(sender, e);               
             }
         }       
       
-        private void btn_KontaktHinzufügen_Click(object sender, RoutedEventArgs e)  //Kontakt hinzufügen
+        private void btn_AddContact_Click(object sender, RoutedEventArgs e)  //Kontakt hinzufügen
         {
             Username_Dialog dlg = new Username_Dialog();
             dlg.ShowDialog();
             if (dlg.DialogResult == true)
             {
-                User NeuerKontakt = dlg.ReturnUser();   //Usernamen des Kontakts abfragen
-                Kontaktliste.Add(NeuerKontakt);
-                KontaktlisteinListbox();    //Zur Kontaktliste hinzufügen
+                User newcontact = dlg.ReturnUser();   //Usernamen des Kontakts abfragen
+                contactlist.Add(newcontact);
+                DisplayContactlistinListbox();    //Zur contactlist hinzufügen
             }
         }
-
-        private void KontaktlisteinListbox()
+        private void ListboxContacts_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //ListboxKontakte.ItemsSource = Kontaktliste;   //hat immer nur den ersten Kontakt angezeigt
-
-            ListboxKontakte.Items.Clear();  //Listbox leeren
-            foreach (User Kontakt in Kontaktliste)
-            {
-                ListboxKontakte.Items.Add(Kontakt); //Alle Kontakte in Listbox übertragen
-            }
-            ListboxKontakte.UpdateLayout(); //Layout aktualisieren
+            DisplayMessage();
         }
 
-        private bool ListeBeinhaltet(List<User> Liste, User Kontakt)    //Hat mit .Contains nicht funktioniert
+        private void DisplayContactlistinListbox()
         {
-            for (int i = 0; i < Liste.Count ; i++)
+            ListboxContacts.Items.Clear();  //Listbox leeren
+            foreach (User contact in contactlist)
             {
-                if (Liste[i].Username == Kontakt.Username)
+                ListboxContacts.Items.Add(contact); //Alle Kontakte in Listbox übertragen
+            }
+            ListboxContacts.UpdateLayout(); //Layout aktualisieren
+        }
+
+        private bool listcontains(List<User> list, User contact)    //Hat mit .Contains nicht funktioniert
+        {
+            for (int i = 0; i < list.Count ; i++)
+            {
+                if (list[i].Username == contact.Username)
                 {
                     return true;
                 }
@@ -202,31 +204,25 @@ namespace Chatprogramm_github
             return false;
         }
 
-        private void btn_KontaktLöschen_Click(object sender, RoutedEventArgs e)
+        private void btn_deletecontact_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                Speicherung.Kontakt_löschen(Kontaktliste[ListboxKontakte.SelectedIndex]);
-                Kontaktliste.Remove(Kontaktliste[ListboxKontakte.SelectedIndex]);   //Kontakt löschen
-                grid_Verlauf.Children.Clear();
-               
+                Save.DeleteContact(contactlist[ListboxContacts.SelectedIndex]);
+                contactlist.Remove(contactlist[ListboxContacts.SelectedIndex]);   //Kontakt löschen
+                grid_Verlauf.Children.Clear();               
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 MessageBox.Show("Bitte wählen Sie erst einen Kontakt aus", "Fehler");
             }
 
-            ListboxKontakte.Items.Clear();  //Listbox leeren
-            foreach (User Kontakt in Kontaktliste)
+            ListboxContacts.Items.Clear();  //Listbox leeren
+            foreach (User contact in contactlist)
             {
-                ListboxKontakte.Items.Add(Kontakt); //Alle Kontakte in Listbox übertragen
+                ListboxContacts.Items.Add(contact); //Alle Kontakte in Listbox übertragen
             }
-            ListboxKontakte.UpdateLayout(); //Layout aktualisieren
-        }
-
-        private void ListboxKontakte_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            NachrichtenDarstellen();
+            ListboxContacts.UpdateLayout(); //Layout aktualisieren
         }
     }
 }

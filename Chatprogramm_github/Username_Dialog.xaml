@@ -10,6 +10,5 @@
         <Label Content="Bitte geben Sie einen Benutzernamen ein:" HorizontalAlignment="Left" Height="45" Margin="50,24,0,0" VerticalAlignment="Top" Width="320"/>
         <TextBox x:Name="txt_Username" HorizontalAlignment="Left" Height="23" Margin="50,69,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="320"/>
         <Button x:Name="btn_Ok_Username" Content="Ok" HorizontalAlignment="Left" Height="25" Margin="260,120,0,0" VerticalAlignment="Top" Width="95" Click="btn_Ok_Username_Click"/>
-
     </Grid>
 </Window>

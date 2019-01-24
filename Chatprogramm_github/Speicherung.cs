@@ -2,7 +2,7 @@
  * 24.01.2019, Jacqueline Kaefer und Luca Katzenberger
  * Diese Datei enthält Funktionen, um Daten zu speichern und diese auch wieder zu laden.
  * Sie ist in mehrere Klasse unterteilt.
- * Die erste Klasse Speicherung enthält mehrere Funktionen zum Erstellen einer Sicherungsdatei und zum Speichern von Daten darin.
+ * Die erste Klasse Speicherung enthält mehrere Funktionen zum Erstellen einer Backupfile und zum Speichern von Daten darin.
  * Die zweite Klasse Laden enthält Funktionen zum Laden von unterschiedlichen Daten aus der Speicherungsdatei.
  */
 
@@ -16,209 +16,207 @@ using System.Windows;
 namespace Chatprogramm_github
 {
 
-    class Speicherung
+    class Save
     {
         #region Constants
-        //Pfad unter dem die Sicherungsdatei gespeichert wird
-        const string pfad = @"Sicherungsdatei.xml";
+        //Pfad unter dem die Backupfile gespeichert wird
+        const string path = @"Backupfile.xml";
         #endregion
 
         #region Methods
-        public static void Speichern(User Mainuser, Nachricht empfangeneNachricht)
+        public static void SaveData(User Mainuser, Message receivedMessage)
         {
-            //Diese Methode speichert die mitgegebenene Nachricht in der Sicherungsdatei ab. 
+            //Diese Methode speichert die mitgegebenene message im Backupfile ab. 
+
+            //Backupfile laden
+            XmlDocument backupfile = new XmlDocument();
+            backupfile.Load(path);
             
-            //Sicherungsdatei laden
-            XmlDocument Sicherungsdatei = new XmlDocument();
-            Sicherungsdatei.Load(pfad);
-            
-            //Unter welchem Kontakt soll die Nachricht gespeichert werden
-            User Chatpartner = new User();
-            if (empfangeneNachricht.Sender.Username == Mainuser.Username)
+            //Unter welchem Kontakt soll die message gespeichert werden
+            User chatpartner = new User();
+            if (receivedMessage.Sender.Username == Mainuser.Username)
             {
-                Chatpartner = empfangeneNachricht.Empfänger;
+                chatpartner = receivedMessage.Receiver;
             }
             else
             {
-                Chatpartner = empfangeneNachricht.Sender;
+                chatpartner = receivedMessage.Sender;
             }
 
             //Existiert Node schon?
-            XmlNodeList Chatkontakte = Sicherungsdatei.SelectNodes("//mainuser/chats/chatkontakt"); //Alle ChatkontaktNodes laden
+            XmlNodeList chatcontacts = backupfile.SelectNodes("//mainuser/chats/chatcontacts"); //Alle ChatkontaktNodes laden
 
-            bool gefunden = false;
-            foreach (XmlNode Chatkontakt in Chatkontakte)   //Liste durchgehen, ob Chatkontakt schon gespeichert ist
+            bool found = false;
+            foreach (XmlNode chatcontact in chatcontacts)   //Liste durchgehen, ob chatcontact schon gespeichert ist
             {
-                if (Chatkontakt.Attributes["username"].Value == Chatpartner.Username) //True, wenn der Kontakt schon in der Sicherungsdatei enthalten ist.
+                if (chatcontact.Attributes["username"].Value == chatpartner.Username) //True, wenn der Kontakt schon in der Backupfile enthalten ist.
                 {
-                    gefunden = true;
+                    found = true;
 
                     //Neue NachrichtNode erstellen mit all ihren Attributen
-                    XmlNode Nachricht = Sicherungsdatei.CreateElement("nachricht");
+                    XmlNode message = backupfile.CreateElement("message");
 
-                    XmlAttribute Sendername = Sicherungsdatei.CreateAttribute("sendername");
-                    XmlAttribute Empfängername = Sicherungsdatei.CreateAttribute("empfängername");
-                    XmlAttribute Zeitpunkt = Sicherungsdatei.CreateAttribute("zeitpunkt");
-                    XmlAttribute Abgeschickt = Sicherungsdatei.CreateAttribute("abgeschickt");
+                    XmlAttribute sendername = backupfile.CreateAttribute("sendername");
+                    XmlAttribute receivername = backupfile.CreateAttribute("receivername");
+                    XmlAttribute timestamp = backupfile.CreateAttribute("timestamp");
+                    XmlAttribute sent = backupfile.CreateAttribute("sent");
 
                     //Den Attributen werden Values zugeordnet.
-                    Sendername.Value = empfangeneNachricht.Sender.Username;
-                    Empfängername.Value = empfangeneNachricht.Empfänger.Username;
-                    Zeitpunkt.Value = empfangeneNachricht.Zeitpunkt.ToFileTime().ToString();
-                    Abgeschickt.Value = empfangeneNachricht.Abgeschickt.ToString();//.ToString();
-                    Nachricht.InnerText = empfangeneNachricht.Nachrichtentext;
+                    sendername.Value = receivedMessage.Sender.Username;
+                    receivername.Value = receivedMessage.Receiver.Username;
+                    timestamp.Value = receivedMessage.Timestamp.ToFileTime().ToString();
+                    sent.Value = receivedMessage.Sent.ToString();//.ToString();
+                    message.InnerText = receivedMessage.Text;
 
                     //Die Attribute werden an die Node gehängt
-                    Nachricht.Attributes.Append(Sendername);
-                    Nachricht.Attributes.Append(Empfängername);
-                    Nachricht.Attributes.Append(Zeitpunkt);
-                    Nachricht.Attributes.Append(Abgeschickt);
+                    message.Attributes.Append(sendername);
+                    message.Attributes.Append(receivername);
+                    message.Attributes.Append(timestamp);
+                    message.Attributes.Append(sent);
 
-                    //Und die Node an den Chatkontakt
-                    Chatkontakt.AppendChild(Nachricht);
+                    //Und die Node an den chatcontact
+                    chatcontact.AppendChild(message);
                 }
             }
 
-            if (gefunden == false)  //falls Chatkontakt nicht gefunden wurde
+            if (found == false)  //falls chatcontact nicht gefunden wurde
             {
-                XmlNode Chats = Sicherungsdatei.SelectSingleNode("//mainuser/chats");
+                XmlNode chats = backupfile.SelectSingleNode("//mainuser/chats");
 
                 //Erstellen einer neuen ChatkontaktNode mit ihrem Attribut
-                XmlNode Chatkontakt = Sicherungsdatei.CreateElement("chatkontakt");
-                XmlAttribute Username = Sicherungsdatei.CreateAttribute("username");
-                Username.Value = Chatpartner.Username;
-                Chatkontakt.Attributes.Append(Username);
+                XmlNode chatcontact = backupfile.CreateElement("chatcontact");
+                XmlAttribute username = backupfile.CreateAttribute("username");
+                username.Value = chatpartner.Username;
+                chatcontact.Attributes.Append(username);
 
                 //Erstelle neue NachrichtNode
-                XmlNode Nachricht = Sicherungsdatei.CreateElement("nachricht");
+                XmlNode message = backupfile.CreateElement("nachricht");
 
-                XmlAttribute Sendername = Sicherungsdatei.CreateAttribute("sendername");
-                XmlAttribute Empfängername = Sicherungsdatei.CreateAttribute("empfängername");
-                XmlAttribute Zeitpunkt = Sicherungsdatei.CreateAttribute("zeitpunkt");
-                XmlAttribute Abgeschickt = Sicherungsdatei.CreateAttribute("abgeschickt");
-                Sendername.Value = empfangeneNachricht.Sender.Username;
-                Empfängername.Value = empfangeneNachricht.Empfänger.Username;
-                Zeitpunkt.Value = empfangeneNachricht.Zeitpunkt.ToFileTime().ToString();//ToString();
-                Abgeschickt.Value = empfangeneNachricht.Abgeschickt.ToString();
-                Nachricht.InnerText = empfangeneNachricht.Nachrichtentext;
+                XmlAttribute sendername = backupfile.CreateAttribute("sendername");
+                XmlAttribute receivername = backupfile.CreateAttribute("receivername");
+                XmlAttribute timestamp = backupfile.CreateAttribute("timestamp");
+                XmlAttribute sent = backupfile.CreateAttribute("sent");
+                sendername.Value = receivedMessage.Sender.Username;
+                receivername.Value = receivedMessage.Receiver.Username;
+                timestamp.Value = receivedMessage.Timestamp.ToString();
+                sent.Value = receivedMessage.Sent.ToString();
+                message.InnerText = receivedMessage.Text;
 
-                Nachricht.Attributes.Append(Sendername);
-                Nachricht.Attributes.Append(Empfängername);
-                Nachricht.Attributes.Append(Zeitpunkt);
-                Nachricht.Attributes.Append(Abgeschickt);
+                message.Attributes.Append(sendername);
+                message.Attributes.Append(receivername);
+                message.Attributes.Append(timestamp);
+                message.Attributes.Append(sent);
 
-                //Die neuen Nodes werden an die Sicherungsdatei gehängt.
-                Chats.AppendChild(Chatkontakt);
-                Chatkontakt.AppendChild(Nachricht);                
+                //Die neuen Nodes werden an das Backupfile angehängt.
+                chats.AppendChild(chatcontact);
+                chatcontact.AppendChild(message);                
             }
 
             //Datei wieder speichern
-            Sicherungsdatei.Save(pfad);
+            backupfile.Save(path);
         }
 
-        public static void NeueSicherungsdateiErstellen(User Mainuser)
+        public static void CreateNewBackupfile(User Mainuser)
         {
-            //Diese Methode erstellt eine völlig neue Sicherungsdatei
-            XmlDocument Sicherungsdatei = new XmlDocument();
+            //Diese Methode erstellt eine völlig neue Backupfile
+            XmlDocument sicherungsdatei = new XmlDocument();
 
-            XmlNode Mainusernode = Sicherungsdatei.CreateElement("mainuser");            
-            XmlAttribute Username = Sicherungsdatei.CreateAttribute("username");
-            Username.Value = Mainuser.Username;
-            Mainusernode.Attributes.Append(Username);
+            XmlNode mainusernode = sicherungsdatei.CreateElement("mainuser");            
+            XmlAttribute username = sicherungsdatei.CreateAttribute("username");
+            username.Value = Mainuser.Username;
+            mainusernode.Attributes.Append(username);
             
-            Sicherungsdatei.AppendChild(Mainusernode);
+            sicherungsdatei.AppendChild(mainusernode);
 
-            XmlNode Chats = Sicherungsdatei.CreateElement("chats");           
-            Mainusernode.AppendChild(Chats);
+            XmlNode chats = sicherungsdatei.CreateElement("chats");           
+            mainusernode.AppendChild(chats);
 
-            Sicherungsdatei.Save(pfad); //Datei speichern
+            sicherungsdatei.Save(path); //Datei speichern
         }
 
-        public static void Kontakt_löschen(User kontakt)
+        public static void DeleteContact(User contact)
         {
-            //Diese Methode löscht den mitgegebenen Kontakt und alle zugehörigen Nachrichten aus der Sicherungsdatei
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(pfad);
+            //Diese Methode löscht den mitgegebenen Kontakt und alle zugehörigen Nachrichten aus der Backupfile
+            XmlDocument Backupfile = new XmlDocument();
+            Backupfile.Load(path);
 
-            //Es werden neue Nodes erstellt und an die Sicherungsdatei angehängt.
-            XmlNode chats = xmlDoc.SelectSingleNode("//mainuser/chats");
-            XmlNodeList chatkontakte = xmlDoc.SelectNodes("//mainuser/chats/chatkontakt");
+            //Es werden neue Nodes erstellt und an die Backupfile angehängt.
+            XmlNode chats = Backupfile.SelectSingleNode("//mainuser/chats");
+            XmlNodeList chatcontacts = Backupfile.SelectNodes("//mainuser/chats/chatcontact");
 
-            foreach(XmlNode chatkontakt in chatkontakte)
+            foreach(XmlNode chatcontact in chatcontacts)
             {
-                if(chatkontakt.Attributes["username"].Value==kontakt.Username)
+                if(chatcontact.Attributes["username"].Value==contact.Username)
                 {
-                    chats.RemoveChild(chatkontakt);
+                    chats.RemoveChild(chatcontact);
                     MessageBox.Show("Kontakt wurde gelöscht");
                 }
                 
             }
             //Nach der Bearbeitung wird die Datei wieder gespeichert.
-            xmlDoc.Save(pfad);
+            Backupfile.Save(path);
         }
         #endregion
     }
 
-    class Laden
+    class Load
     {
         #region Constants
-        //Pfad unter dem die Sicherungsdatei abgelegt ist
-        const string pfad = @"Sicherungsdatei.xml";
+        //Pfad unter dem die Backupfile abgelegt ist
+        const string path = @"Backupfile.xml";
         #endregion
 
         #region Methods
-        public static List <Nachricht> Nachrichten_Laden(User aktueller_Chatpartner)
+        public static List <Message> LoadMessages(User chatpartner)
         {
-            //Diese Methode lädt die Sicherungsdatei und gibt alle Nachrichten in Zusamenhang mit dem mitgegebenen User in einer Liste zurück
+            //Diese Methode lädt die Backupfile und gibt alle Nachrichten in Zusamenhang mit dem mitgegebenen User in einer Liste zurück
            
-            XmlNode aktueller_Chatkontakt;
             XmlDocument Sicherungsdatei = new XmlDocument();
-            Sicherungsdatei.Load(pfad);
+            Sicherungsdatei.Load(path);
 
-            List<Nachricht> Nachrichten = new List<Nachricht>();
-            Nachrichten.Clear(); //Damit die Liste auf jeden Fall leer ist.
+            List<Message> messages = new List<Message>();
+            messages.Clear(); //Damit die Liste auf jeden Fall leer ist.
 
-            XmlNodeList Chatkontakte = Sicherungsdatei.SelectNodes("//mainuser/chats/chatkontakt"); //Alle ChatkontaktNodes laden
+            XmlNodeList chatcontacts = Sicherungsdatei.SelectNodes("//mainuser/chats/chatcontact"); //Alle ChatkontaktNodes laden
 
-            foreach(XmlNode Chatkontakt in Chatkontakte)
+            foreach(XmlNode chatcontact in chatcontacts)
             {
-                if(Chatkontakt.Attributes["username"].Value == aktueller_Chatpartner.Username) //Suchen der Node, die zum mitgegebenen User gehört
+                if(chatcontact.Attributes["username"].Value == chatpartner.Username) //Suchen der Node, die zum mitgegebenen User gehört
                 {
-                    aktueller_Chatkontakt = Chatkontakt;
-                    XmlNodeList nachrichten = aktueller_Chatkontakt.ChildNodes;
-                    foreach (XmlNode nachricht in aktueller_Chatkontakt)
+                    XmlNodeList messagenodelist = chatcontact.ChildNodes;
+                    foreach (XmlNode message in messagenodelist)
                     {
-                        //Aus dem Inhalt der Sicherungsdatei wird ein Objekt Nachricht erzeugt
-                        string nachrichtentext = nachricht.InnerText;
-                        User Sender = new User(nachricht.Attributes["sendername"].Value);
-                        User Empfänger = new User(nachricht.Attributes["empfängername"].Value);
-                        System.DateTime dateTime = System.DateTime.FromFileTime(System.Convert.ToInt64(nachricht.Attributes["zeitpunkt"].Value));
-                        bool abgeschickt = System.Convert.ToBoolean(nachricht.Attributes["abgeschickt"].Value);
+                        //Aus dem Inhalt der Backupfile wird ein Objekt message erzeugt
+                        string text = message.InnerText;
+                        User sender = new User(message.Attributes["sendername"].Value);
+                        User receiver = new User(message.Attributes["receivername"].Value);
+                        System.DateTime dateTime = System.Convert.ToDateTime(message.Attributes["timestamp"].Value);
+                        bool sent = System.Convert.ToBoolean(message.Attributes["sent"].Value);
 
-                        Nachricht hilfe = new Nachricht(nachrichtentext, Sender,Empfänger, dateTime,abgeschickt);
+                        Message tmp_message = new Message(text, sender,receiver, dateTime,sent);
 
-                        //Die Nachricht wird der List hinzugefügt.
-                        Nachrichten.Add(hilfe);
+                        //Die message wird der List hinzugefügt.
+                        messages.Add(tmp_message);
                     }
                 }
             }
-            return Nachrichten; //Die Liste mit Nachrichten wird zurückgegeben
+            return messages; //Die List mit Messages wird zurückgegeben
         }
         
-        public static User Username_Laden()
+        public static User LoadUsername()
         {        
-            //Diese Funktion prüft, ob bereits eine Sicherungsdatei existiert. Wenn ja, gibt sie den darin gespeicherten Mainuser zurück. Wenn nicht ruft sie eine Methode auf,
-            //die eine neue Sicherungsdatei erstellt, nachdem sie den Username_Dialog zum Festlegen eines Mainusers aufgerufen hat.
+            //Diese Funktion prüft, ob bereits eine Backupfile existiert. Wenn ja, gibt sie den darin gespeicherten Mainuser zurück. Wenn nicht ruft sie eine Methode auf,
+            //die eine neue Backupfile erstellt, nachdem sie den Username_Dialog zum Festlegen eines Mainusers aufgerufen hat.
 
-            User Mainuser = new User();
+            User mainuser = new User();
 
-            if (File.Exists(pfad))//Existiert schon eine Sicherungsdatei?
+            if (File.Exists(path))//Existiert schon eine Backupfile?
             {
                 //Wenn ja, wird der Mainuser geladen
-                XmlDocument Sicherungsdatei = new XmlDocument();
-                Sicherungsdatei.Load(pfad);
-                XmlNode MainUserNode = Sicherungsdatei.SelectSingleNode("//mainuser");
-                Mainuser.Username = MainUserNode.Attributes["username"].Value;
+                XmlDocument backupfile = new XmlDocument();
+                backupfile.Load(path);
+                XmlNode MainUserNode = backupfile.SelectSingleNode("//mainuser");
+                mainuser.Username = MainUserNode.Attributes["username"].Value;
             }
             else
             {
@@ -228,31 +226,31 @@ namespace Chatprogramm_github
                 dlg.ShowDialog();
                 if (dlg.DialogResult == true)
                 {
-                    Mainuser = dlg.ReturnUser();
+                    mainuser = dlg.ReturnUser();
                 }
-                //Danach wird eine neue Sicherungsdatei erstellt.
-                Speicherung.NeueSicherungsdateiErstellen(Mainuser);
+                //Danach wird eine neue Backupfile erstellt.
+                Save.CreateNewBackupfile(mainuser);
             }
-            return Mainuser; //Der Mainuser wird zurückgegeben
+            return mainuser; //Der Mainuser wird zurückgegeben
         }
 
-        public static List<User> Kontakte_laden()
+        public static List<User> LoadContacts()
         {
-            //Diese Methode lädt alle Kotakte aus der Sicherungsdatei in eine Liste mit Usern und gibt diese zurück. Existiert keine Sicherungsdatei gibt diese Methode eine leere Liste zurück.
-            List<User> Kontaktliste = new List<User>();
+            //Diese Methode lädt alle Kotakte aus der Backupfile in eine Liste mit Usern und gibt diese zurück. Existiert keine Backupfile gibt diese Methode eine leere Liste zurück.
+            List<User> contactlist = new List<User>();
 
-            if (File.Exists(pfad))
+            if (File.Exists(path))
             {
-                XmlDocument Sicherungsdatei = new XmlDocument();
-                Sicherungsdatei.Load(pfad);
-                XmlNodeList Kontakte = Sicherungsdatei.SelectNodes("//mainuser/chats/chatkontakt");
-               foreach(XmlNode Kontakt in Kontakte)
+                XmlDocument backupfile = new XmlDocument();
+                backupfile.Load(path);
+                XmlNodeList contactnodes = backupfile.SelectNodes("//mainuser/chats/chatcontact");
+               foreach(XmlNode contactnode in contactnodes)
                {
-                    User kontakt = new User(Kontakt.Attributes["username"].Value);
-                    Kontaktliste.Add(kontakt);
+                    User contact = new User(contactnode.Attributes["username"].Value);
+                    contactlist.Add(contact);
                }                
             }
-            return Kontaktliste;
+            return contactlist;
         }
         #endregion
     }

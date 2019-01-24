@@ -6,7 +6,7 @@
  * 
  * Dieses Fenster wird angezeigt, wenn es erforderlich ist, dass der Benutzer einen Username eingibt.
  * Dies ist beim ersten Starten des Programms erforderlich, da es noch keine Sicherungsdatei gibt.
- * Außerdem wird es beim Hinzufügen eines neuen Kontakts zur Kontaktliste angezeigt.
+ * Außerdem wird es beim Hinzufügen eines neuen Kontakts zur contactlist angezeigt.
  * 
  */
 
@@ -23,16 +23,16 @@ namespace Chatprogramm_github
 
         #region Attributes
 
-        private User Benutzer;
+        private User user;
         #endregion
 
         #region Methods
         private void btn_Ok_Username_Click(object sender, RoutedEventArgs e)
         {
             //Der User wird mit der Eingabe des username erstellt
-            this.Benutzer = new User(txt_Username.Text);
+            this.user = new User(txt_Username.Text);
             //Entspricht die Eingabe den Anforderungen des Usernames wird der Dialog geschlossen.
-            if (this.Benutzer.Username != null)
+            if (this.user.Username != null)
             {
                 this.DialogResult = true;
             }
@@ -48,7 +48,7 @@ namespace Chatprogramm_github
         public User ReturnUser()
         {
             //Diese Methode gibt den kreeierten User aus
-            return this.Benutzer;
+            return this.user;
         }
         #endregion
     }

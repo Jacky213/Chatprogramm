@@ -15,20 +15,18 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="245"/>
-
-
         </Grid.ColumnDefinitions>
 
-        <ListBox x:Name="ListboxKontakte" HorizontalAlignment="Center" Height="320" Margin="0,0,-0.2,0" VerticalAlignment="Center" Width="245" Background="#7F90FF00" Grid.Row="1" Grid.IsSharedSizeScope="True" SelectionChanged="ListboxKontakte_SelectionChanged">
+        <ListBox x:Name="ListboxContacts" HorizontalAlignment="Center" Height="320" Margin="0,0,-0.2,0" VerticalAlignment="Center" Width="245" Background="#7F90FF00" Grid.Row="1" Grid.IsSharedSizeScope="True" SelectionChanged="ListboxContacts_SelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Username}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Label x:Name="lbl_Kontakte_Titel" Content="Kontakte" HorizontalAlignment="Center" Height="60" VerticalAlignment="Center" Width="245" FontSize="24" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Center" Padding="5" UseLayoutRounding="False" HorizontalContentAlignment="Center" Background="#7F90FF00" Margin="0,0,-0.2,0" Grid.IsSharedSizeScope="True" Grid.Row="0"/>
-        <Button x:Name="btn_KontaktHinzufügen" Content="Kontakt hinzufügen" Height="25" Margin="0,16,127,10" Width="118" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btn_KontaktHinzufügen_Click"/>
-        <Button x:Name="btn_KontaktLöschen" Content="Kontakt löschen" Height="25" Width="118" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="127,16,0,10" Click="btn_KontaktLöschen_Click"/>
+        <Label x:Name="lbl_contacts_title" Content="Kontakte" HorizontalAlignment="Center" Height="60" VerticalAlignment="Center" Width="245" FontSize="24" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Center" Padding="5" UseLayoutRounding="False" HorizontalContentAlignment="Center" Background="#7F90FF00" Margin="0,0,-0.2,0" Grid.IsSharedSizeScope="True" Grid.Row="0"/>
+        <Button x:Name="btn_AddContact" Content="Kontakt hinzufügen" Height="25" Margin="0,16,127,10" Width="118" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btn_AddContact_Click"/>
+        <Button x:Name="btn_DeleteContact" Content="Kontakt löschen" Height="25" Width="118" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="127,16,0,10" Click="btn_deletecontact_Click"/>
         <Grid x:Name="Grid_2" HorizontalAlignment="Right" Height="435" Margin="0,0,-532.2,-14.2" VerticalAlignment="Top" Width="522" Grid.RowSpan="3" RenderTransformOrigin="0.5,0.5" Grid.IsSharedSizeScope="True">
             <Grid.RenderTransform>
                 <TransformGroup>
@@ -46,8 +44,8 @@
                 <RowDefinition Height="8*"/>
                 <RowDefinition Height="130"/>
             </Grid.RowDefinitions>
-            <TextBox x:Name="txt_Nachricht" HorizontalAlignment="Left" Height="126" Margin="-3,0.4,0,0" TextWrapping="Wrap" Text="&lt;Hier Nachricht eingeben&gt;" VerticalAlignment="Top" Width="524" Grid.Row="2" AcceptsReturn="True" KeyDown="txt_Nachricht_KeyDown"/>
-            <Button x:Name="btn_Senden" Content="Senden" HorizontalAlignment="Right" Height="25" Margin="0,10.4,0.6,5.4" Width="124" RenderTransformOrigin="0.476,-1.288" Grid.Row="1" VerticalAlignment="Center" Click="btn_Senden_Click"/>
+            <TextBox x:Name="txt_Message" HorizontalAlignment="Left" Height="126" Margin="-3,0.4,0,0" TextWrapping="Wrap" Text="&lt;Hier Nachricht eingeben&gt;" VerticalAlignment="Top" Width="524" Grid.Row="2" AcceptsReturn="True" KeyDown="txt_Nachricht_KeyDown"/>
+            <Button x:Name="btn_Send" Content="Senden" HorizontalAlignment="Right" Height="25" Margin="0,10.4,0.6,5.4" Width="124" RenderTransformOrigin="0.476,-1.288" Grid.Row="1" VerticalAlignment="Center" Click="btn_Send_Click"/>
             <ScrollViewer HorizontalAlignment="Left" Height="250" Grid.RowSpan="2" VerticalAlignment="Top" Width="521" Margin="1,10,-0.4,0" Background="#FFCEFF84">
                 <Grid x:Name="grid_Verlauf" Height="0" Width="502" VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>

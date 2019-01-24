@@ -73,7 +73,7 @@
     <Compile Include="FremderKontakt_Dialog.xaml.cs">
       <DependentUpon>FremderKontakt_Dialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Nachricht.cs" />
+    <Compile Include="Message.cs" />
     <Compile Include="Sender.cs" />
     <Compile Include="Speicherung.cs" />
     <Compile Include="User.cs" />
