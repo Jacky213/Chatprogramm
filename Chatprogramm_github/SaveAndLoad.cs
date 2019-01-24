@@ -90,7 +90,7 @@ namespace Chatprogramm_github
                 chatcontact.Attributes.Append(username);
 
                 //Erstelle neue NachrichtNode
-                XmlNode message = backupfile.CreateElement("nachricht");
+                XmlNode message = backupfile.CreateElement("message");
 
                 XmlAttribute sendername = backupfile.CreateAttribute("sendername");
                 XmlAttribute receivername = backupfile.CreateAttribute("receivername");
