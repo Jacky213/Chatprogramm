@@ -44,7 +44,7 @@ namespace Chatprogramm_github
             }
 
             //Existiert Node schon?
-            XmlNodeList chatcontacts = backupfile.SelectNodes("//mainuser/chats/chatcontacts"); //Alle ChatkontaktNodes laden
+            XmlNodeList chatcontacts = backupfile.SelectNodes("//mainuser/chats/chatcontact"); //Alle ChatkontaktNodes laden
 
             bool found = false;
             foreach (XmlNode chatcontact in chatcontacts)   //Liste durchgehen, ob chatcontact schon gespeichert ist
@@ -64,7 +64,7 @@ namespace Chatprogramm_github
                     //Den Attributen werden Values zugeordnet.
                     sendername.Value = receivedMessage.Sender.Username;
                     receivername.Value = receivedMessage.Receiver.Username;
-                    timestamp.Value = receivedMessage.Timestamp.ToFileTime().ToString();
+                    timestamp.Value = receivedMessage.Timestamp.ToString();
                     sent.Value = receivedMessage.Sent.ToString();//.ToString();
                     message.InnerText = receivedMessage.Text;
 
