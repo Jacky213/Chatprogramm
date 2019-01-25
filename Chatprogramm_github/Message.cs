@@ -75,25 +75,24 @@ namespace Chatprogramm_github
             }
             catch
             {
-                MessageBox.Show("Es ist ein beim Senden der Nachricht aufgetreten, bitte versuchen Sie es erneut.");
+                MessageBox.Show("Es ist ein Fehler beim Senden der Nachricht aufgetreten, bitte versuchen Sie es erneut.");
                 return null;
-            }
-         
+            }         
         }
         
 
-        public static Message DecodeMessage (string Codierung)
+        public static Message DecodeMessage (byte[] data)
         {
             try
             {
                 //Diese Nachricht erhält einen Byte-Array, der Empfangen worden ist und erstellt daraus ein Objekt Nachricht, das zurückgegeben wird. 
                 Message receivedmessage = new Message();
+                string encodedmessage = Encoding.Unicode.GetString(data);
                 string[] receiveddata = new string[5];
 
                 // Der Byte-Array wird in einen String konvertiert. Dieser String wird an den Trennzeichen aufgetrennt und die Substrings in einem String-Array gespeichert.
                 //Die einzelnen Substrings werden dann in den Eigenschaften der Nachricht geschrieben.
-
-                receiveddata = Codierung.Split(new string[] { "$%&" }, StringSplitOptions.None);
+                receiveddata = encodedmessage.Split(new string[] { "$%&" }, StringSplitOptions.None);
                 receivedmessage.Sender.Username = receiveddata[0].Trim();
                 receivedmessage.Receiver.Username = receiveddata[1].Trim();
                 receivedmessage.Timestamp = Convert.ToDateTime(receiveddata[2]);
@@ -119,6 +118,7 @@ namespace Chatprogramm_github
             mytxtbox.Width = 500;
             mytxtbox.Background = new SolidColorBrush(Colors.ForestGreen);
             mytxtbox.IsReadOnly = true;
+            mytxtbox.TextWrapping = TextWrapping.Wrap;
 
             return mytxtbox;
         }

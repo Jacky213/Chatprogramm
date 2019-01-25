@@ -44,7 +44,7 @@
                 <RowDefinition Height="8*"/>
                 <RowDefinition Height="130"/>
             </Grid.RowDefinitions>
-            <TextBox x:Name="txt_Message" HorizontalAlignment="Left" Height="126" Margin="-3,0.4,0,0" TextWrapping="Wrap" Text="&lt;Hier Nachricht eingeben&gt;" VerticalAlignment="Top" Width="524" Grid.Row="2" AcceptsReturn="True" KeyDown="txt_Nachricht_KeyDown"/>
+            <TextBox x:Name="txt_Message" HorizontalAlignment="Left" Height="126" Margin="-3,0.4,0,0" TextWrapping="Wrap" Text="&lt;Hier Nachricht eingeben&gt;" VerticalAlignment="Top" Width="524" Grid.Row="2" AcceptsReturn="True" PreviewKeyUp="txt_Nachricht_KeyDown"/>
             <Button x:Name="btn_Send" Content="Senden" HorizontalAlignment="Right" Height="25" Margin="0,10.4,0.6,5.4" Width="124" RenderTransformOrigin="0.476,-1.288" Grid.Row="1" VerticalAlignment="Center" Click="btn_Send_Click"/>
             <ScrollViewer HorizontalAlignment="Left" Height="250" Grid.RowSpan="2" VerticalAlignment="Top" Width="521" Margin="1,10,-0.4,0" Background="#FFCEFF84">
                 <Grid x:Name="grid_Verlauf" Height="0" Width="502" VerticalAlignment="Top">
@@ -53,7 +53,10 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                 </Grid>
-            </ScrollViewer>
+            </ScrollViewer>            
+            <Popup x:Name="PopupNewMessage" Width="250" Height="50" StaysOpen="False" Placement="Right">
+                <TextBlock x:Name="PopupContent" Background="LightGreen" Height="50" FontSize="16" Text="Neue Nachricht" TextAlignment="Center"/>
+            </Popup>
         </Grid>
     </Grid>
 </Window>

@@ -1,5 +1,7 @@
 ﻿/*Haeder
+ * 
  * 24.01.2019, Jacqueline Kaefer und Luca Katzenberger
+ * 
  * Diese Datei enthält Funktionen, um Daten zu speichern und diese auch wieder zu laden.
  * Sie ist in mehrere Klasse unterteilt.
  * Die erste Klasse Speicherung enthält mehrere Funktionen zum Erstellen einer Backupfile und zum Speichern von Daten darin.
@@ -15,7 +17,6 @@ using System.Windows;
 
 namespace Chatprogramm_github
 {
-
     class Save
     {
         #region Constants
@@ -192,6 +193,7 @@ namespace Chatprogramm_github
         #endregion
 
         #region Methods
+
         public static List <Message> LoadMessages(User chatpartner)
         {
             try
@@ -246,7 +248,7 @@ namespace Chatprogramm_github
 
                 User mainuser = new User();
 
-                if (File.Exists(path))//Existiert schon eine Backupfile?
+                if (File.Exists(path))  //Existiert schon eine Backupfile?
                 {
                     //Wenn ja, wird der Mainuser geladen
                     XmlDocument backupfile = new XmlDocument();
@@ -257,15 +259,15 @@ namespace Chatprogramm_github
                 else
                 {
                     //Ein Dialog zur Eingabe des Usernamens wird erstellt und angezeigt
-
                     Username_Dialog dlg = new Username_Dialog();
                     dlg.ShowDialog();
                     if (dlg.DialogResult == true)
                     {
                         mainuser = dlg.ReturnUser();
+                        //Es wird eine neue Backupdatei angelegt
+                        Save.CreateNewBackupfile(mainuser);
                     }
-                    //Danach wird eine neue Backupfile erstellt.
-                    Save.CreateNewBackupfile(mainuser);
+
                 }
                 return mainuser; //Der Mainuser wird zurückgegeben
             }
@@ -276,8 +278,6 @@ namespace Chatprogramm_github
             }
      
         }
-
-           
 
         public static List<User> LoadContacts()
         {

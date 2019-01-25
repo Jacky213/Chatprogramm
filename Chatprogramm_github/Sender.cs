@@ -57,13 +57,13 @@ namespace Chatprogramm_github
                 }
                 else
                 {
-                    messagesender.Send(data, data.Length);      //Die Methode Send schickt die Nachricht ab . Sie benötigt das zu versendene byte-Array und die Anzahl der bytes 
+                    messagesender.Send(data, data.Length);      //Die Methode Send schickt die Nachricht ab. Sie benötigt das zu versendene byte-Array und die Anzahl der bytes 
                 }
                
             }
             catch
             {
-                MessageBox.Show("Beim Senden der Nachricht ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.");
+                MessageBox.Show("Beim Senden der Nachricht ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.", "ERROR");
             }
             
         }

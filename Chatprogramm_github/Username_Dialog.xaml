@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Chatprogramm_github"
         mc:Ignorable="d"
-        Title="Benutzernamen eingeben" Height="200" Width="400">
+        Title="Benutzernamen eingeben" Height="200" Width="400" Closed="Window_Closed">
     <Grid>
         <Label Content="Bitte geben Sie einen Benutzernamen ein:" HorizontalAlignment="Left" Height="45" Margin="50,24,0,0" VerticalAlignment="Top" Width="320"/>
-        <TextBox x:Name="txt_Username" HorizontalAlignment="Left" Height="23" Margin="50,69,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="320"/>
+        <TextBox x:Name="txt_Username" HorizontalAlignment="Left" Height="23" Margin="50,69,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="320" PreviewKeyUp="Txt_Username_PreviewKeyUp"/>
         <Button x:Name="btn_Ok_Username" Content="Ok" HorizontalAlignment="Left" Height="25" Margin="260,120,0,0" VerticalAlignment="Top" Width="95" Click="btn_Ok_Username_Click"/>
     </Grid>
 </Window>

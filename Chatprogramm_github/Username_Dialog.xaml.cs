@@ -11,6 +11,7 @@
  */
 
 using System.Windows;
+using System.Windows.Input;
 
 namespace Chatprogramm_github
 {
@@ -48,7 +49,6 @@ namespace Chatprogramm_github
             {
                 //Fehlermeldung, dass die Eingabe des Benutzers nicht den Anforderungen eines Username entspricht.
                 MessageBox.Show("Die Länge des Usernames muss zwischen 3 und 20 Stellen lang sein. Bitte geben Sie einen gültigen Username ein.", "Error");
-                txt_Username.Text = ""; //Textbox wird geleert
             }
         }
         
@@ -56,6 +56,23 @@ namespace Chatprogramm_github
         {
             //Diese Methode gibt den kreeierten User aus
             return this.user;
+        }        
+
+        private void Txt_Username_PreviewKeyUp(object sender, KeyEventArgs e)
+        {            
+            //Drückt der Benutzer Enter, wird der eingegebene Benutzername übernommen.
+            if (e.Key == Key.Enter)
+            {
+                btn_Ok_Username_Click(sender, e);
+            }            
+        }
+
+        private void Window_Closed(object sender, System.EventArgs e)
+        {
+            if (DialogResult == false)
+            {
+                Application.Current.Shutdown();
+            }
         }
         #endregion
     }
