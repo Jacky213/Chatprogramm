@@ -13,5 +13,10 @@ namespace Chatprogramm_github
     /// </summary>
     public partial class App : Application
     {
+        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show("Es ist ein Fehler aufgetreten.");
+            e.Handled = true;
+        }
     }
 }

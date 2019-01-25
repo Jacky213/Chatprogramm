@@ -35,40 +35,81 @@ namespace Chatprogramm_github
 
         public MainWindow() //Initialisierung
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
+            }
+            catch
+            {
+                MessageBox.Show("Bitte staten Sie das Programm neu.");
+            }
+            
 
             //Mainuser abfragen/initialisieren
             Mainuser = Load.LoadUsername();
-            MessageBox.Show("Sie haben sich als \"" + Mainuser.Username + "\" angemeldet.", "Anmeldung erfolgreich");
+            if(Mainuser==null)
+            {
+                //Wie wollen wir mit Fehlern umgehen??
+            }
+            else
+            {
+                MessageBox.Show("Sie haben sich als \"" + Mainuser.Username + "\" angemeldet.", "Anmeldung erfolgreich");
+            }
+            
 
             //contactlist abfragen
             contactlist = Load.LoadContacts();
+           
             DisplayContactlistinListbox();
 
             //Sender initialisieren
             messagesender = new Sender();
-            //Empfänger initialisieren
-            messagereceiver = new UdpClient(port);                    
+            try
+            {
+                //Empfänger initialisieren
+                messagereceiver = new UdpClient(port);
 
-            //Paralleler Thread für das Empfangen von Nachrichten anlegen
-            ThreadStart start = new ThreadStart(Receiver);
-            receiverthread = new Thread(start);
-            receiverthread.IsBackground = true;
-            receiverthread.Start();
+                //Paralleler Thread für das Empfangen von Nachrichten anlegen
+                ThreadStart start = new ThreadStart(Receiver);
+                receiverthread = new Thread(start);
+                receiverthread.IsBackground = true;
+                receiverthread.Start();
+            }
+            catch
+            {
+                MessageBox.Show("Bei der Initialisierung der Thread zum Nachrichtenempfang ist ein Fehler aufgetreten. Bitte starten Sie das Programm neu.");
+            }
+            
         }
 
         public void Receiver() //Könnte man in Klasse auslagern??
         {
-            IPEndPoint endpoint = new IPEndPoint(IPAddress.Any, port); //Any überwacht alle IP-Adressen des Netzwerks
-            AddMessage messageDelegate = MessageReceived;
-            while (true)
+            try
             {
-                byte[] data = messagereceiver.Receive(ref endpoint); // ref --> Verweis
-                string message = Encoding.Unicode.GetString(data);
-                Message receivedmessage = new Message();
-                receivedmessage = Message.DecodeMessage(message);
-                Dispatcher.Invoke(messageDelegate, receivedmessage);    //führt einen Delegaten aus
+                IPEndPoint endpoint = new IPEndPoint(IPAddress.Any, port); //Any überwacht alle IP-Adressen des Netzwerks
+                AddMessage messageDelegate = MessageReceived;
+                while (true)
+                {
+                    byte[] data = messagereceiver.Receive(ref endpoint); // ref --> Verweis
+                    string message = Encoding.Unicode.GetString(data);
+                    Message receivedmessage = new Message();
+                    receivedmessage = Message.DecodeMessage(message);
+                    if(receivedmessage == null)
+                    {
+                        //Was soll bei Fehler gemacht werden??
+                    }
+                    else
+                    {
+                        Dispatcher.Invoke(messageDelegate, receivedmessage);    //führt einen Delegaten aus
+                    }
+                    
+                }
             }
+            catch
+            {
+                MessageBox.Show("Beim Empfang einer Nachricht ist ein Fehler aufgetreten.");
+            }
+            
         }
 
         public void MessageReceived(Message receivedmessage)
@@ -148,7 +189,7 @@ namespace Chatprogramm_github
             string messagetext = txt_Message.Text;
             if (ListboxContacts.SelectedIndex >= 0)     //Ist ein Kontakt ausgewählt?
             {
-                messagesender.send(new Message(messagetext, Mainuser, contactlist[ListboxContacts.SelectedIndex], DateTime.Now, true));  //Könnte eine Exception werfen, wenn kein Kontakt ausgewählt ist                
+                messagesender.Send(new Message(messagetext, Mainuser, contactlist[ListboxContacts.SelectedIndex], DateTime.Now, true));  //Könnte eine Exception werfen, wenn kein Kontakt ausgewählt ist                
                 txt_Message.Text = "";
             }
             else
@@ -224,5 +265,7 @@ namespace Chatprogramm_github
             }
             ListboxContacts.UpdateLayout(); //Layout aktualisieren
         }
+
+     
     }
 }

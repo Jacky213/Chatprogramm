@@ -18,7 +18,14 @@ namespace Chatprogramm_github
     {
         public Username_Dialog()
         {
-            InitializeComponent();  //Initialisert das Dialogfenster
+            try
+            {
+                InitializeComponent();  //Initialisert das Dialogfenster
+            }
+            catch
+            {
+                MessageBox.Show("Es ist ein Fehler aufgetreten.");                
+            }
         }
 
         #region Attributes

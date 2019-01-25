@@ -16,9 +16,17 @@ namespace Chatprogramm_github
     {
         public UnknownUserDialog(User sender)
         {
-            InitializeComponent();  //Die Elemente des Fensters werden initialisiert
-            //Zeigt den Usernamen des unbekannten User an.
-            Tb_display.Text = "Sie haben eine Nachricht von " + sender.Username + " erhalten. Wollen Sie diesen Nutzer als neuen Kontakt speichern oder ignorieren?";
+            try
+            {
+                InitializeComponent();  //Die Elemente des Fensters werden initialisiert
+                                        //Zeigt den Usernamen des unbekannten User an.
+                Tb_display.Text = "Sie haben eine Nachricht von " + sender.Username + " erhalten. Wollen Sie diesen Nutzer als neuen Kontakt speichern oder ignorieren?";
+            }
+            catch
+            {
+                MessageBox.Show("Es ist ein Fehler aufgetreten.");
+            }
+       
         }
 
         #region Attributes
@@ -37,6 +45,7 @@ namespace Chatprogramm_github
             result = false;   //Message & User sollen verworfen werden
             DialogResult = true;    //Dialog war erfolgreich
         }
+        //
         #endregion
     }
 }
