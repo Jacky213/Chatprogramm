@@ -22,6 +22,7 @@ namespace Chatprogramm_github
             try
             {
                 InitializeComponent();  //Initialisert das Dialogfenster
+                txt_Username.Focus();   //Fokus auf Textbox legen, sodass der Benutzer direkt tippen kann
             }
             catch
             {

@@ -37,6 +37,7 @@ namespace Chatprogramm_github
             try
             {
                 InitializeComponent();
+                txt_Message.Focus();    //Fokus auf die Textbox zur Eingabe der Nachricht legen
             }
             catch
             {

@@ -30,7 +30,7 @@ namespace Chatprogramm_github
             {
                 if ( value.Trim().Length <= 20 && value.Trim().Length >= 3) //Hat der Username zwischen 3 und 20 Zeichen?
                 {
-                    this.username = value;
+                    this.username = value.Trim();
                 }
                 else
                 {
