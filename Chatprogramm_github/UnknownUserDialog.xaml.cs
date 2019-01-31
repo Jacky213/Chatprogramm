@@ -45,7 +45,6 @@ namespace Chatprogramm_github
             result = false;   //Message & User sollen verworfen werden
             DialogResult = true;    //Dialog war erfolgreich
         }
-        //
         #endregion
     }
 }

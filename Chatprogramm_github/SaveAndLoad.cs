@@ -233,7 +233,7 @@ namespace Chatprogramm_github
             }
             catch
             {
-                MessageBox.Show("Die Nachrichten konnten nich aus der Sicherungsdatei geladen werden. Bitte überprüfen Sie die Datei und versuchen Sie es erneut.");
+                MessageBox.Show("Die Nachrichten konnten nicht aus der Sicherungsdatei geladen werden. Bitte überprüfen Sie die Datei und versuchen Sie es erneut.");
                 return null;
             }
            
@@ -259,7 +259,7 @@ namespace Chatprogramm_github
                 else
                 {
                     //Ein Dialog zur Eingabe des Usernamens wird erstellt und angezeigt
-                    Username_Dialog dlg = new Username_Dialog();
+                    Username_Dialog dlg = new Username_Dialog(true);
                     dlg.ShowDialog();
                     if (dlg.DialogResult == true)
                     {

@@ -37,8 +37,7 @@ namespace Chatprogramm_github
             }
             catch
             {
-                MessageBox.Show("Beim Starten des Programms ist ein Fehler aufgetreten. Bitte starten Sie das Programm neu.");
-                
+                MessageBox.Show("Beim Starten des Programms ist ein Fehler aufgetreten. Bitte starten Sie das Programm neu.");                
             }
         
         }

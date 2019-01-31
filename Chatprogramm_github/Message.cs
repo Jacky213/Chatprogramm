@@ -115,7 +115,7 @@ namespace Chatprogramm_github
 
             TextBox mytxtbox = new TextBox();
             mytxtbox.Text = this.Text;
-            mytxtbox.Width = 500;
+            mytxtbox.Width = 250;
             mytxtbox.Background = new SolidColorBrush(Colors.ForestGreen);
             mytxtbox.IsReadOnly = true;
             mytxtbox.TextWrapping = TextWrapping.Wrap;

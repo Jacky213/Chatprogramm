@@ -37,11 +37,10 @@ namespace Chatprogramm_github
             try
             {
                 InitializeComponent();
-                txt_Message.Focus();    //Fokus auf die Textbox zur Eingabe der Nachricht legen
             }
             catch
             {
-                MessageBox.Show("Bitte starten Sie das Programm neu.");
+                MessageBox.Show("Bei der Initialisierung des Programms ist ein Fehler aufgetreten. Bitte starten Sie das Programm neu.");
             }
             
 
@@ -49,7 +48,8 @@ namespace Chatprogramm_github
             Mainuser = Load.LoadUsername();
             if(Mainuser == null || Mainuser.Username == null)
             {
-                //Wie wollen wir mit Fehlern umgehen??
+                MessageBox.Show("Es ist ein Fehler mit Ihrem Usernamen aufgetreten. Bitte starten Sie das Programm neu.", "ERROR");
+                Application.Current.Shutdown();
             }
             else
             {
@@ -77,7 +77,8 @@ namespace Chatprogramm_github
             catch
             {
                 MessageBox.Show("Bei der Initialisierung des Thread zum Nachrichtenempfang ist ein Fehler aufgetreten. Bitte starten Sie das Programm neu.");
-            }            
+            }
+            txt_Message.Focus();    //Fokus auf die Textbox zur Eingabe der Nachricht legen
         }
 
         #region Events
@@ -85,7 +86,7 @@ namespace Chatprogramm_github
         private void btn_Send_Click(object sender, RoutedEventArgs e)
         {
             //Nachricht wird bei Klick auf btn_Send gesendet
-            string messagetext = txt_Message.Text.Replace("\r\n", " ");     //Zeilenumbrüche werden durch ein Leerzeichen ersetzt
+            string messagetext = txt_Message.Text;
             if (ListboxContacts.SelectedIndex >= 0)     //Ist ein Kontakt ausgewählt?
             {
                 messagesender.Send(new Message(messagetext, Mainuser, contactlist[ListboxContacts.SelectedIndex], DateTime.Now, true));  //Könnte eine Exception werfen, wenn kein Kontakt ausgewählt ist                
@@ -101,14 +102,18 @@ namespace Chatprogramm_github
         {
             //Drückt der Benutzer Enter, soll die eingegebene Nachricht abgeschickt werden.
             if (e.Key == Key.Enter)
-            {                
-                btn_Send_Click(sender, e);  //gibt trotzdem ein Enter aus
+            {
+                if (!Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+                {
+                    txt_Message.Text = txt_Message.Text.Substring(0, txt_Message.Text.Length - 2);  //Enter am Ende der Nachricht abschneiden, falls mit Enter geschickt wurde.
+                    btn_Send_Click(sender, e);  //gibt trotzdem ein Enter aus
+                }
             }
         }       
       
         private void btn_AddContact_Click(object sender, RoutedEventArgs e)  //Kontakt hinzufügen
         {
-            Username_Dialog dlg = new Username_Dialog();
+            Username_Dialog dlg = new Username_Dialog(false);
             dlg.ShowDialog();
             if (dlg.DialogResult == true)
             {
@@ -160,7 +165,8 @@ namespace Chatprogramm_github
                     receivedmessage = Message.DecodeMessage(data);
                     if (receivedmessage == null)
                     {
-                        //Was soll bei Fehler gemacht werden??
+                        MessageBox.Show("Es ist ein Fehler beim Empfangen einer Nachricht aufgetreten. Bitte starten Sie das Programm neu.", "ERROR");
+                        Application.Current.Shutdown();
                     }
                     else
                     {
@@ -222,26 +228,29 @@ namespace Chatprogramm_github
 
                 grid_Verlauf.Children.Clear();
 
-                foreach (Message message in savedmessages)
+                if (savedmessages != null)
                 {
-                    TextBox Tb_nachricht = new TextBox();   //neue Textbox erstellen
-                    Tb_nachricht = message.MessageinTextbox();
-                    grid_Verlauf.Height = grid_Verlauf.Height + (Tb_nachricht.Height + 1) * Tb_nachricht.FontSize; //Einstellungen für eine schöne Darstellung
-                    grid_Verlauf.RowDefinitions.Add(new RowDefinition()); //Neue Zeile wird hinzugefügt
+                    foreach (Message message in savedmessages)
+                    {
+                        TextBox Tb_nachricht = new TextBox();   //neue Textbox erstellen
+                        Tb_nachricht = message.MessageinTextbox();
+                        grid_Verlauf.Height = grid_Verlauf.Height + (Tb_nachricht.Height + 1) * Tb_nachricht.FontSize; //Einstellungen für eine schöne Darstellung
+                        grid_Verlauf.RowDefinitions.Add(new RowDefinition()); //Neue Zeile wird hinzugefügt
 
-                    if (message.Sender.Username == Mainuser.Username) //Bin ich Sender?
-                    {
-                        Grid.SetColumn(Tb_nachricht, 1);
-                        Grid.SetRow(Tb_nachricht, row);
-                        row++;
-                        grid_Verlauf.Children.Add(Tb_nachricht);    //Anzeigen
-                    }
-                    else if (message.Receiver.Username == Mainuser.Username)   //Ist die Nachricht an mich adressiert
-                    {
-                        Grid.SetColumn(Tb_nachricht, 0);
-                        Grid.SetRow(Tb_nachricht, row);
-                        row++;
-                        grid_Verlauf.Children.Add(Tb_nachricht);    //Anzeigen
+                        if (message.Sender.Username == Mainuser.Username) //Bin ich Sender?
+                        {
+                            Grid.SetColumn(Tb_nachricht, 1);
+                            Grid.SetRow(Tb_nachricht, row);
+                            row++;
+                            grid_Verlauf.Children.Add(Tb_nachricht);    //Anzeigen
+                        }
+                        else if (message.Receiver.Username == Mainuser.Username)   //Ist die Nachricht an mich adressiert
+                        {
+                            Grid.SetColumn(Tb_nachricht, 0);
+                            Grid.SetRow(Tb_nachricht, row);
+                            row++;
+                            grid_Verlauf.Children.Add(Tb_nachricht);    //Anzeigen
+                        }
                     }
                 }
             }

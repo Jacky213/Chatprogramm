@@ -17,10 +17,11 @@ namespace Chatprogramm_github
 {
     public partial class Username_Dialog : Window
     {
-        public Username_Dialog()
+        public Username_Dialog(bool firstcall)
         {
             try
             {
+                this.Firstcall = firstcall;
                 InitializeComponent();  //Initialisert das Dialogfenster
                 txt_Username.Focus();   //Fokus auf Textbox legen, sodass der Benutzer direkt tippen kann
             }
@@ -32,16 +33,17 @@ namespace Chatprogramm_github
 
         #region Attributes
 
-        private User user;
+        private User User;
+        private bool Firstcall;
         #endregion
 
         #region Methods
         private void btn_Ok_Username_Click(object sender, RoutedEventArgs e)
         {
             //Der User wird mit der Eingabe des username erstellt
-            this.user = new User(txt_Username.Text);
+            this.User = new User(txt_Username.Text);
             //Entspricht die Eingabe den Anforderungen des Usernames wird der Dialog geschlossen.
-            if (this.user.Username != null)
+            if (this.User.Username != null)
             {
                 this.DialogResult = true;
             }
@@ -56,7 +58,7 @@ namespace Chatprogramm_github
         public User ReturnUser()
         {
             //Diese Methode gibt den kreeierten User aus
-            return this.user;
+            return this.User;
         }        
 
         private void Txt_Username_PreviewKeyUp(object sender, KeyEventArgs e)
@@ -70,9 +72,10 @@ namespace Chatprogramm_github
 
         private void Window_Closed(object sender, System.EventArgs e)
         {
-            if (DialogResult == false)
+            if (this.Firstcall == true && DialogResult == false)
             {
                 Application.Current.Shutdown();
+                MessageBox.Show("Sie haben das Programm beendet.");
             }
         }
         #endregion
