@@ -233,7 +233,8 @@ namespace Chatprogramm_github
             }
             catch
             {
-                MessageBox.Show("Die Nachrichten konnten nicht aus der Sicherungsdatei geladen werden. Bitte überprüfen Sie die Datei und versuchen Sie es erneut.");
+                MessageBox.Show("Die Nachrichten konnten nicht aus der Sicherungsdatei geladen werden. Bitte überprüfen Sie die Datei und versuchen Sie es erneut. Das Programm wird geschlossen.");
+                Application.Current.Shutdown();
                 return null;
             }
            
@@ -273,7 +274,8 @@ namespace Chatprogramm_github
             }
             catch
             {
-                MessageBox.Show("Beim Start der Programms ist ein Fehler aufgetreten.");
+                MessageBox.Show("Beim Start des Programms ist ein Fehler aufgetreten und es wird geschlossen.");
+                Application.Current.Shutdown();
                 return null;
             }
      
@@ -285,23 +287,22 @@ namespace Chatprogramm_github
             {
                 //Diese Methode lädt alle Kotakte aus der Backupfile in eine Liste mit Usern und gibt diese zurück. Existiert keine Backupfile gibt diese Methode eine leere Liste zurück.
                 List<User> contactlist = new List<User>();
-
-                if (File.Exists(path))
+                                
+                XmlDocument backupfile = new XmlDocument();
+                backupfile.Load(path);
+                XmlNodeList contactnodes = backupfile.SelectNodes("//mainuser/chats/chatcontact");
+                foreach (XmlNode contactnode in contactnodes)
                 {
-                    XmlDocument backupfile = new XmlDocument();
-                    backupfile.Load(path);
-                    XmlNodeList contactnodes = backupfile.SelectNodes("//mainuser/chats/chatcontact");
-                    foreach (XmlNode contactnode in contactnodes)
-                    {
-                        User contact = new User(contactnode.Attributes["username"].Value);
-                        contactlist.Add(contact);
-                    }
+                    User contact = new User(contactnode.Attributes["username"].Value);
+                    contactlist.Add(contact);
                 }
+                
                 return contactlist;
             }
             catch
             {
-                MessageBox.Show("Beim Laden der Kontakte ist ein Fehler aufgetreten. Bitte überprüfen Sie die Sicherungsdatei.");
+                MessageBox.Show("Beim Laden der Kontakte ist ein Fehler aufgetreten. Bitte überprüfen Sie die Sicherungsdatei. Das Programm wird geschlossen.");
+                Application.Current.Shutdown();
                 return null;
             }
             

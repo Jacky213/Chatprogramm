@@ -46,15 +46,8 @@ namespace Chatprogramm_github
 
             //Mainuser abfragen/initialisieren
             Mainuser = Load.LoadUsername();
-            if(Mainuser == null || Mainuser.Username == null)
-            {
-                MessageBox.Show("Es ist ein Fehler mit Ihrem Usernamen aufgetreten. Bitte starten Sie das Programm neu.", "ERROR");
-                Application.Current.Shutdown();
-            }
-            else
-            {
-                MessageBox.Show("Sie haben sich als \"" + Mainuser.Username + "\" angemeldet.", "Anmeldung erfolgreich");
-            }            
+            MessageBox.Show("Sie haben sich als \"" + Mainuser.Username + "\" angemeldet.", "Anmeldung erfolgreich");
+                       
 
             //contactlist abfragen
             contactlist = Load.LoadContacts();
@@ -89,7 +82,7 @@ namespace Chatprogramm_github
             string messagetext = txt_Message.Text;
             if (ListboxContacts.SelectedIndex >= 0)     //Ist ein Kontakt ausgewählt?
             {
-                messagesender.Send(new Message(messagetext, Mainuser, contactlist[ListboxContacts.SelectedIndex], DateTime.Now, true));  //Könnte eine Exception werfen, wenn kein Kontakt ausgewählt ist                
+                messagesender.Send(new Message(messagetext, Mainuser, contactlist[ListboxContacts.SelectedIndex], DateTime.Now, true));            
                 txt_Message.Text = "";
             }
             else
@@ -141,18 +134,13 @@ namespace Chatprogramm_github
                 MessageBox.Show("Bitte wählen Sie erst einen Kontakt aus", "Fehler");
             }
 
-            ListboxContacts.Items.Clear();  //Listbox leeren
-            foreach (User contact in contactlist)
-            {
-                ListboxContacts.Items.Add(contact); //Alle Kontakte in Listbox übertragen
-            }
-            ListboxContacts.UpdateLayout(); //Layout aktualisieren
+            DisplayContactlistinListbox();
         }
         #endregion
 
         #region Methods
 
-        public void Receiver() //Könnte man in Klasse auslagern??
+        public void Receiver()
         {
             try
             {
@@ -222,7 +210,7 @@ namespace Chatprogramm_github
 
         public void DisplayMessage()
         {
-            if (!(ListboxContacts.SelectedIndex == -1))
+            if (!(ListboxContacts.SelectedIndex == -1)) //Ist ein Kontakt ausgewählt?
             {
                 List<Message> savedmessages = Load.LoadMessages(contactlist[ListboxContacts.SelectedIndex]);
 
