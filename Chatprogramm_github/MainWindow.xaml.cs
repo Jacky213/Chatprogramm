@@ -32,8 +32,9 @@ namespace Chatprogramm_github
         List<User> contactlist = new List<User>();
         #endregion
 
-        public MainWindow() //Initialisierung
+        public MainWindow() 
         {
+            //Initialisierung
             try
             {
                 InitializeComponent();

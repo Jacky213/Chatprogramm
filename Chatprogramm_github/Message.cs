@@ -80,7 +80,6 @@ namespace Chatprogramm_github
             }         
         }
         
-
         public static Message DecodeMessage (byte[] data)
         {
             try

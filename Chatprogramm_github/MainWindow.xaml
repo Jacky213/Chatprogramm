@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Chatprogramm_github"       
         mc:Ignorable="d"
-        Title="Chatprogramm" Height="480" Width="807.8" ResizeMode="CanMinimize" Icon="Brief.ico">
+        Title="Chatprogramm" Height="480" Width="807.8" ResizeMode="CanMinimize" Icon="favicon.ico">
 
     <Grid x:Name="Grid_1" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="431">
         <Grid.RowDefinitions>
