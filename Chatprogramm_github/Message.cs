@@ -51,19 +51,10 @@ namespace Chatprogramm_github
                 //Protokoll: Sender,Empfänger,Zeitpunkt,Abgeschickt,Nachricht 
 
                 string code = "";
-                string username = Sender.Username;
-                while (username.Length < 20)
-                {
-                    username += " "; //Der Usernamen wird mit Leerzeichen auf 20 Zeichen verlängert.
-                }
-                code += username + "$%&"; //An den Usernamen wird das Trennzeichen zum Trennen der Informationen angehängt.
-                string receivername = Receiver.Username;
-                while (receivername.Length < 20)
-                {
-                    receivername += " "; //Auch der Empfängername wird auf 20 Zeichen verlängert.
-                }
-                //Die anderen Informationen werden angehängt
-                code += receivername + "$%&";
+             
+                //Die Informationen werden angehängt
+                code += Sender.Username + "$%&"; //An den Usernamen wird das Trennzeichen zum Trennen der Informationen angehängt.
+                code += Receiver.Username + "$%&";
                 code += Timestamp.ToString() + "$%&";
                 code += Sent.ToString() + "$%&";
                 code += Text;
@@ -92,8 +83,8 @@ namespace Chatprogramm_github
                 // Der Byte-Array wird in einen String konvertiert. Dieser String wird an den Trennzeichen aufgetrennt und die Substrings in einem String-Array gespeichert.
                 //Die einzelnen Substrings werden dann in den Eigenschaften der Nachricht geschrieben.
                 receiveddata = encodedmessage.Split(new string[] { "$%&" }, StringSplitOptions.None);
-                receivedmessage.Sender.Username = receiveddata[0].Trim();
-                receivedmessage.Receiver.Username = receiveddata[1].Trim();
+                receivedmessage.Sender.Username = receiveddata[0];
+                receivedmessage.Receiver.Username = receiveddata[1];
                 receivedmessage.Timestamp = Convert.ToDateTime(receiveddata[2]);
                 receivedmessage.Sent = Convert.ToBoolean(receiveddata[3]);
                 receivedmessage.Text = receiveddata[4];
