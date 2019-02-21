@@ -74,8 +74,8 @@ namespace Chatprogramm_github
         {
             if (this.Firstcall == true && DialogResult == false)
             {
-                Application.Current.Shutdown();
                 MessageBox.Show("Sie haben das Programm beendet.");
+                System.Environment.Exit(0);
             }
         }
         #endregion

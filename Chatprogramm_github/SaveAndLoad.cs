@@ -234,7 +234,7 @@ namespace Chatprogramm_github
             catch
             {
                 MessageBox.Show("Die Nachrichten konnten nicht aus der Sicherungsdatei geladen werden. Bitte überprüfen Sie die Datei und versuchen Sie es erneut. Das Programm wird geschlossen.");
-                Application.Current.Shutdown();
+                System.Environment.Exit(0);
                 return null;
             }
            
@@ -275,7 +275,7 @@ namespace Chatprogramm_github
             catch
             {
                 MessageBox.Show("Beim Start des Programms ist ein Fehler aufgetreten und es wird geschlossen.");
-                Application.Current.Shutdown();
+                System.Environment.Exit(0);
                 return null;
             }
      
@@ -302,7 +302,7 @@ namespace Chatprogramm_github
             catch
             {
                 MessageBox.Show("Beim Laden der Kontakte ist ein Fehler aufgetreten. Bitte überprüfen Sie die Sicherungsdatei. Das Programm wird geschlossen.");
-                Application.Current.Shutdown();
+                System.Environment.Exit(0);
                 return null;
             }
             

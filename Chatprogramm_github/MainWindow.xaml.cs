@@ -72,7 +72,6 @@ namespace Chatprogramm_github
             {
                 MessageBox.Show("Bei der Initialisierung des Thread zum Nachrichtenempfang ist ein Fehler aufgetreten. Bitte starten Sie das Programm neu.");
             }
-            txt_Message.Focus();    //Fokus auf die Textbox zur Eingabe der Nachricht legen
         }
 
         #region Events
@@ -99,8 +98,11 @@ namespace Chatprogramm_github
             {
                 if (!Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
                 {
-                    txt_Message.Text = txt_Message.Text.Substring(0, txt_Message.Text.Length - 2);  //Enter am Ende der Nachricht abschneiden, falls mit Enter geschickt wurde.
-                    btn_Send_Click(sender, e);  //gibt trotzdem ein Enter aus
+                    if (txt_Message.Text.Length >= 2)   //Soll nichts machen bei leerer Textbox
+                    {
+                        txt_Message.Text = txt_Message.Text.Substring(0, txt_Message.Text.Length - 2);  //Enter am Ende der Nachricht abschneiden, falls mit Enter geschickt wurde.
+                        btn_Send_Click(sender, e);  //gibt trotzdem ein Enter aus
+                    }
                 }
             }
         }       
@@ -155,7 +157,7 @@ namespace Chatprogramm_github
                     if (receivedmessage == null)
                     {
                         MessageBox.Show("Es ist ein Fehler beim Empfangen einer Nachricht aufgetreten. Bitte starten Sie das Programm neu.", "ERROR");
-                        Application.Current.Shutdown();
+                        System.Environment.Exit(0);
                     }
                     else
                     {
