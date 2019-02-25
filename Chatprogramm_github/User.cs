@@ -8,9 +8,7 @@
  * Außerdem enthält er mehrere Konstruktoren, sodass direkt beim Aanlegen einer User ein Username mitgegeben werden kann.
  * 
  */
-
-
-
+ 
 namespace Chatprogramm_github
 {   
     public class User

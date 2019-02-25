@@ -74,7 +74,7 @@ namespace Chatprogramm_github
         {
             if (this.Firstcall == true && DialogResult == false)
             {
-                MessageBox.Show("Sie haben das Programm beendet.");
+                MessageBox.Show("Sie haben das Programm beendet.", "Meldung");
                 System.Environment.Exit(0);
             }
         }

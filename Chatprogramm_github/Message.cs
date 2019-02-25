@@ -5,7 +5,6 @@
  * Die Klasse enthält ausserdem zwei Konstruktoren und mehrere Methoden, unter anderem zum Codieren und Decodieren von Nachrichten.
  */
 
-
 using System;
 using System.Text;
 using System.Windows.Controls;

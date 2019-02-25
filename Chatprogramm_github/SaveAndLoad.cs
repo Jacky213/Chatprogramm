@@ -8,12 +8,10 @@
  * Die zweite Klasse Laden enthält Funktionen zum Laden von unterschiedlichen Daten aus der Speicherungsdatei.
  */
 
-
 using System.Collections.Generic;
 using System.Xml;
 using System.IO;
 using System.Windows;
-
 
 namespace Chatprogramm_github
 {

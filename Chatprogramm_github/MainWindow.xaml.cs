@@ -107,8 +107,9 @@ namespace Chatprogramm_github
             }
         }       
       
-        private void btn_AddContact_Click(object sender, RoutedEventArgs e)  //Kontakt hinzufügen
+        private void btn_AddContact_Click(object sender, RoutedEventArgs e)
         {
+            //Kontakt hinzufügen
             Username_Dialog dlg = new Username_Dialog(false);
             dlg.ShowDialog();
             if (dlg.DialogResult == true)
@@ -261,7 +262,7 @@ namespace Chatprogramm_github
             ListboxContacts.UpdateLayout(); //Layout aktualisieren
         }
 
-        private bool listcontains(List<User> list, User contact)    //Hat mit .Contains nicht funktioniert
+        private bool listcontains(List<User> list, User contact)
         {
             for (int i = 0; i < list.Count ; i++)
             {

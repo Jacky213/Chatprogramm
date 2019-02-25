@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Chatprogramm_github"
         mc:Ignorable="d"
-        Title="Fremder Benutzer" Height="176" Width="400">
+        Title="Fremder Benutzer" Height="176" Width="400" Icon="favicon.ico">
 
     <StackPanel>
         <TextBlock x:Name="Tb_display" Text="Sie haben eine Nachricht von einem fremden Benutzer erhalten. Wollen Sie diesen speichern oder ignorieren?" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" TextWrapping="Wrap" Width="347" Margin="15"/>
